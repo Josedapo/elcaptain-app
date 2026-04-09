@@ -157,47 +157,41 @@ export default function Home() {
     if (!pwd) return;
 
     setAuthError(false);
-    sessionStorage.setItem("elcaptain_password", pwd);
-
-    // Retry with the pending message or just validate
-    const text = pendingMessage || "hello";
-    const userMessage: Message = { role: "user", content: text };
-    const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
     setLoading(true);
 
     try {
+      // Validate password with a lightweight probe
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${pwd}`,
         },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: [{ role: "user", content: "ping" }] }),
       });
 
       if (res.status === 401) {
         setAuthError(true);
-        setMessages(messages); // revert
-        sessionStorage.removeItem("elcaptain_password");
         setLoading(false);
         return;
       }
 
-      const data = await res.json();
-      setNeedsAuth(false);
-      setPendingMessage(null);
+      // Password correct — save and close overlay
+      sessionStorage.setItem("elcaptain_password", pwd);
       setPassword(pwd);
-      setMessages([
-        ...newMessages,
-        { role: "assistant", content: data.response },
-      ]);
-    } catch {
-      setMessages([
-        ...newMessages,
-        { role: "assistant", content: "Error connecting to the server." },
-      ]);
       setNeedsAuth(false);
+
+      // If there was a pending message, replay it
+      if (pendingMessage) {
+        const userMessage: Message = { role: "user", content: pendingMessage };
+        const newMessages = [...messages, userMessage];
+        setMessages(newMessages);
+        setPendingMessage(null);
+        const data = await res.json();
+        setMessages([...newMessages, { role: "assistant", content: data.response }]);
+      }
+    } catch {
+      setAuthError(true);
     } finally {
       setLoading(false);
     }
@@ -363,8 +357,8 @@ export default function Home() {
 
       {/* Auth overlay */}
       {needsAuth && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-8 max-w-sm w-full mx-4 shadow-xl">
+        <div className="fixed inset-0 bg-white flex items-center justify-center z-50">
+          <div className="max-w-sm w-full mx-4">
             <img
               src="/elcaptain-color.png"
               alt="ElCaptain"

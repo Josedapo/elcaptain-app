@@ -253,13 +253,17 @@ export default function Home() {
         )}
 
         <div className="max-w-3xl mx-auto space-y-6">
-          {messages.map((m, i) => (
+          {messages.map((m, i) => {
+            const hasChart = m.role === "assistant" && m.content.includes("```html");
+            return (
             <div
               key={i}
               className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                  hasChart ? "w-full" : "max-w-[85%]"
+                } ${
                   m.role === "user"
                     ? "bg-gradient-to-r from-[#E63371] to-[#7B1FA2] text-white"
                     : "bg-zinc-100 text-zinc-900 prose prose-sm prose-zinc max-w-none [&>hr]:my-4"
@@ -314,7 +318,8 @@ export default function Home() {
                 )}
               </div>
             </div>
-          ))}
+            );
+          })}
 
           {loading && (
             <div className="flex justify-start">

@@ -40,10 +40,21 @@ export default function Home() {
   const messagesEnd = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  // Restore password from sessionStorage on mount
+  // Restore password from sessionStorage or check if auth is needed
   useEffect(() => {
     const saved = sessionStorage.getItem("elcaptain_password");
-    if (saved) setPassword(saved);
+    if (saved) {
+      setPassword(saved);
+      return;
+    }
+    // Probe the API to see if auth is required
+    fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages: [{ role: "user", content: "ping" }] }),
+    }).then((res) => {
+      if (res.status === 401) setNeedsAuth(true);
+    }).catch(() => {});
   }, []);
 
   useEffect(() => {

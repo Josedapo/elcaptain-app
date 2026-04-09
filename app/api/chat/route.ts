@@ -180,8 +180,26 @@ function executeTool(name: string, input: any): unknown {
   }
 }
 
+const VISUAL_KEYWORDS = [
+  "presentation", "presentación", "presentacion",
+  "informe visual", "visual report", "report",
+  "informe", "dashboard", "slide",
+  "diseña", "design", "crea un informe", "create a report",
+  "panoramic", "panorámico", "panoramico",
+];
+
+function needsOpus(messages: { role: string; content: string }[]): boolean {
+  const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
+  if (!lastUserMsg) return false;
+  const text = lastUserMsg.content.toLowerCase();
+  return VISUAL_KEYWORDS.some((kw) => text.includes(kw));
+}
+
 async function handleRemote(messages: { role: string; content: string }[]): Promise<string> {
   const client = getAnthropicClient();
+  const useOpus = needsOpus(messages);
+  const model = useOpus ? "claude-opus-4-20250514" : "claude-sonnet-4-20250514";
+  const maxTokens = useOpus ? 8192 : 4096;
 
   const sdkMessages: Anthropic.MessageParam[] = messages.map((m) => ({
     role: m.role as "user" | "assistant",
@@ -193,8 +211,8 @@ async function handleRemote(messages: { role: string; content: string }[]): Prom
 
   for (let i = 0; i < MAX_ITERATIONS; i++) {
     const response = await client.messages.create({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 4096,
+      model,
+      max_tokens: maxTokens,
       system: SYSTEM_PROMPT,
       tools: TOOLS,
       messages: currentMessages,

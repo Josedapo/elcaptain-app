@@ -266,7 +266,7 @@ export default function Home() {
                 } ${
                   m.role === "user"
                     ? "bg-gradient-to-r from-[#E63371] to-[#7B1FA2] text-white"
-                    : "bg-zinc-100 text-zinc-900 prose prose-sm prose-zinc max-w-none [&>hr]:my-4"
+                    : "bg-zinc-100 text-zinc-900 prose prose-sm prose-zinc max-w-none [&>hr]:my-5 [&>h2]:mt-6 [&>h2]:mb-2 [&>h3]:mt-5 [&>h3]:mb-2 [&>p]:my-2 [&>ul]:my-2 [&>ol]:my-2"
                 }`}
               >
                 {m.role === "user" ? (

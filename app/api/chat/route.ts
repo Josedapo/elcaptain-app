@@ -206,6 +206,25 @@ async function handleRemote(messages: { role: string; content: string }[]): Prom
     content: m.content,
   }));
 
+  // Mark the last user message from conversation history for multi-turn caching.
+  // This caches system + tools + all prior turns, so each tool use iteration
+  // only pays for the new tool results.
+  if (sdkMessages.length >= 3) {
+    const lastUserIdx = sdkMessages.findLastIndex((m) => m.role === "user");
+    if (lastUserIdx >= 0 && typeof sdkMessages[lastUserIdx].content === "string") {
+      sdkMessages[lastUserIdx] = {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: sdkMessages[lastUserIdx].content as string,
+            cache_control: { type: "ephemeral" },
+          },
+        ],
+      };
+    }
+  }
+
   let currentMessages = [...sdkMessages];
   const MAX_ITERATIONS = 10;
 
@@ -213,7 +232,13 @@ async function handleRemote(messages: { role: string; content: string }[]): Prom
     const response = await client.messages.create({
       model,
       max_tokens: maxTokens,
-      system: SYSTEM_PROMPT,
+      system: [
+        {
+          type: "text",
+          text: SYSTEM_PROMPT,
+          cache_control: { type: "ephemeral" },
+        },
+      ],
       tools: TOOLS,
       messages: currentMessages,
     });

@@ -164,6 +164,7 @@ export const TOOLS: Tool[] = [
         },
       },
     },
+    cache_control: { type: "ephemeral" },
   },
 ];
 

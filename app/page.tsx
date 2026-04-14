@@ -223,142 +223,159 @@ export default function Home() {
         )}
       </header>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-6 py-4">
-        {messages.length === 0 && (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center max-w-md">
+      {messages.length === 0 ? (
+        /* Welcome screen — input centered like Claude */
+        <div className="flex-1 flex items-center justify-center px-6">
+          <div className="w-full max-w-2xl">
+            <div className="text-center mb-8">
               <img
                 src="/elcaptain-color.png"
                 alt="ElCaptain"
                 className="h-16 mx-auto mb-6"
               />
-              <p className="text-zinc-500 mb-6">
+              <p className="text-zinc-500">
                 Benchmark performance, spot underpriced opportunities, and
                 reallocate with confidence — backed by real data from 15K+
                 teams and creators across 128 countries.
               </p>
-              <div className="flex flex-col gap-2 text-sm text-zinc-400">
-                <p className="italic">
-                  &quot;Which athletes in the UK are generating the highest ROI
-                  relative to their audience size?&quot;
-                </p>
-                <p className="italic">
-                  &quot;I have $200K to invest in creator partnerships in
-                  Brazil. Where should I allocate it?&quot;
-                </p>
-              </div>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <textarea
+                ref={textareaRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask about partnerships, ROI, benchmarks, or budget allocation..."
+                rows={3}
+                className="w-full resize-none rounded-xl bg-zinc-50 border border-zinc-300 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-[#E63371] focus:ring-1 focus:ring-[#E63371]"
+                style={{ minHeight: "80px", maxHeight: "200px" }}
+              />
+            </form>
+            <div className="flex flex-col gap-2 text-sm text-zinc-400 mt-4 text-center">
+              <p className="italic">
+                &quot;Which athletes in the UK are generating the highest ROI
+                relative to their audience size?&quot;
+              </p>
+              <p className="italic">
+                &quot;I have $200K to invest in creator partnerships in
+                Brazil. Where should I allocate it?&quot;
+              </p>
             </div>
           </div>
-        )}
-
-        <div className="max-w-3xl mx-auto space-y-6">
-          {messages.map((m, i) => {
-            const hasChart = m.role === "assistant" && m.content.includes("```html");
-            return (
-            <div
-              key={i}
-              className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-            >
-              <div
-                className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                  hasChart ? "w-full" : "max-w-[85%]"
-                } ${
-                  m.role === "user"
-                    ? "bg-gradient-to-r from-[#E63371] to-[#7B1FA2] text-white"
-                    : "bg-zinc-100 text-zinc-900 prose prose-sm prose-zinc max-w-none [&>hr]:my-5 [&>h2]:mt-6 [&>h2]:mb-2 [&>h3]:mt-5 [&>h3]:mb-2 [&>p]:my-2 [&>ul]:my-2 [&>ol]:my-2"
-                }`}
-              >
-                {m.role === "user" ? (
-                  <span className="whitespace-pre-wrap">{m.content}</span>
-                ) : (
-                  <ReactMarkdown
-                    remarkPlugins={[remarkGfm]}
-                    components={{
-                      table: ({ children }) => (
-                        <div className="overflow-x-auto my-2">
-                          <table className="min-w-full text-xs border-collapse">
-                            {children}
-                          </table>
-                        </div>
-                      ),
-                      th: ({ children }) => (
-                        <th className="border border-zinc-300 bg-zinc-200 px-2 py-1 text-left font-semibold">
-                          {children}
-                        </th>
-                      ),
-                      td: ({ children }) => (
-                        <td className="border border-zinc-300 px-2 py-1">
-                          {children}
-                        </td>
-                      ),
-                      code: ({ className, children }) => {
-                        const content = String(children).trim();
-                        if (className === "language-html" && content.includes("<")) {
-                          return (
-                            <iframe
-                              srcDoc={content}
-                              className="w-full rounded-lg border border-zinc-200 my-2"
-                              style={{ height: "420px" }}
-                              sandbox="allow-scripts"
-                            />
-                          );
-                        }
-                        return (
-                          <code className={`${className || ""} bg-zinc-200 px-1 py-0.5 rounded text-xs`}>
-                            {children}
-                          </code>
-                        );
-                      },
-                      pre: ({ children }) => <>{children}</>,
-                    }}
-                  >
-                    {m.content}
-                  </ReactMarkdown>
-                )}
-              </div>
-            </div>
-            );
-          })}
-
-          {loading && (
-            <div className="flex justify-start">
-              <div className="bg-zinc-100 rounded-2xl px-4 py-3 text-sm text-zinc-400">
-                <span className="animate-pulse">{thinkingWord}...</span>
-                <span className="text-zinc-400 ml-2 text-xs">{elapsed < 60 ? `${elapsed}s` : `${Math.floor(elapsed / 60)}m ${elapsed % 60}s`}</span>
-              </div>
-            </div>
-          )}
-
-          <div ref={messagesEnd} />
         </div>
-      </div>
+      ) : (
+        /* Conversation mode — messages + input at bottom */
+        <>
+          <div className="flex-1 overflow-y-auto px-6 py-4">
+            <div className="max-w-3xl mx-auto space-y-6">
+              {messages.map((m, i) => {
+                const hasChart = m.role === "assistant" && m.content.includes("```html");
+                return (
+                <div
+                  key={i}
+                  className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+                >
+                  <div
+                    className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+                      hasChart ? "w-full" : "max-w-[85%]"
+                    } ${
+                      m.role === "user"
+                        ? "bg-gradient-to-r from-[#E63371] to-[#7B1FA2] text-white"
+                        : "bg-zinc-100 text-zinc-900 prose prose-sm prose-zinc max-w-none [&>hr]:my-5 [&>h2]:mt-6 [&>h2]:mb-2 [&>h3]:mt-5 [&>h3]:mb-2 [&>p]:my-2 [&>ul]:my-2 [&>ol]:my-2"
+                    }`}
+                  >
+                    {m.role === "user" ? (
+                      <span className="whitespace-pre-wrap">{m.content}</span>
+                    ) : (
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          table: ({ children }) => (
+                            <div className="overflow-x-auto my-2">
+                              <table className="min-w-full text-xs border-collapse">
+                                {children}
+                              </table>
+                            </div>
+                          ),
+                          th: ({ children }) => (
+                            <th className="border border-zinc-300 bg-zinc-200 px-2 py-1 text-left font-semibold">
+                              {children}
+                            </th>
+                          ),
+                          td: ({ children }) => (
+                            <td className="border border-zinc-300 px-2 py-1">
+                              {children}
+                            </td>
+                          ),
+                          code: ({ className, children }) => {
+                            const content = String(children).trim();
+                            if (className === "language-html" && content.includes("<")) {
+                              return (
+                                <iframe
+                                  srcDoc={content}
+                                  className="w-full rounded-lg border border-zinc-200 my-2"
+                                  style={{ height: "420px" }}
+                                  sandbox="allow-scripts"
+                                />
+                              );
+                            }
+                            return (
+                              <code className={`${className || ""} bg-zinc-200 px-1 py-0.5 rounded text-xs`}>
+                                {children}
+                              </code>
+                            );
+                          },
+                          pre: ({ children }) => <>{children}</>,
+                        }}
+                      >
+                        {m.content}
+                      </ReactMarkdown>
+                    )}
+                  </div>
+                </div>
+                );
+              })}
 
-      {/* Input */}
-      <div className="border-t border-zinc-200 px-6 py-4 flex-shrink-0">
-        <form
-          onSubmit={handleSubmit}
-          className="max-w-3xl mx-auto flex gap-3 items-end"
-        >
-          <textarea
-            ref={textareaRef}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Ask about partnerships, ROI, benchmarks, or budget allocation..."
-            rows={1}
-            className="flex-1 resize-none rounded-xl bg-zinc-50 border border-zinc-300 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-[#E63371] focus:ring-1 focus:ring-[#E63371]"
-            style={{ maxHeight: "200px" }}
-          />
-          <button
-            type="submit"
-            disabled={loading || !input.trim()}
-            className="rounded-xl bg-gradient-to-r from-[#E63371] to-[#7B1FA2] px-5 py-3 text-sm font-medium text-white hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
-          >
-            Send
-          </button>
-        </form>
-      </div>
+              {loading && (
+                <div className="flex justify-start">
+                  <div className="bg-zinc-100 rounded-2xl px-4 py-3 text-sm text-zinc-400">
+                    <span className="animate-pulse">{thinkingWord}...</span>
+                    <span className="text-zinc-400 ml-2 text-xs">{elapsed < 60 ? `${elapsed}s` : `${Math.floor(elapsed / 60)}m ${elapsed % 60}s`}</span>
+                  </div>
+                </div>
+              )}
+
+              <div ref={messagesEnd} />
+            </div>
+          </div>
+
+          {/* Input */}
+          <div className="border-t border-zinc-200 px-6 py-4 flex-shrink-0">
+            <form
+              onSubmit={handleSubmit}
+              className="max-w-3xl mx-auto flex gap-3 items-end"
+            >
+              <textarea
+                ref={textareaRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Ask about partnerships, ROI, benchmarks, or budget allocation..."
+                rows={1}
+                className="flex-1 resize-none rounded-xl bg-zinc-50 border border-zinc-300 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-[#E63371] focus:ring-1 focus:ring-[#E63371]"
+                style={{ maxHeight: "200px" }}
+              />
+              <button
+                type="submit"
+                disabled={loading || !input.trim()}
+                className="rounded-xl bg-gradient-to-r from-[#E63371] to-[#7B1FA2] px-5 py-3 text-sm font-medium text-white hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+              >
+                Send
+              </button>
+            </form>
+          </div>
+        </>
+      )}
 
       {/* Auth overlay */}
       {needsAuth && (

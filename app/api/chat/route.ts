@@ -198,7 +198,7 @@ function needsOpus(messages: { role: string; content: string }[]): boolean {
 async function handleRemote(messages: { role: string; content: string }[]): Promise<string> {
   const client = getAnthropicClient();
   const useOpus = needsOpus(messages);
-  const model = useOpus ? "claude-opus-4-20250514" : "claude-sonnet-4-20250514";
+  const model = useOpus ? "claude-opus-4-6" : "claude-sonnet-4-6";
   const maxTokens = useOpus ? 8192 : 4096;
 
   const sdkMessages: Anthropic.MessageParam[] = messages.map((m) => ({

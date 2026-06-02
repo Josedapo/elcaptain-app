@@ -1,0 +1,935 @@
+{
+  "meta": {
+    "totalHandles": 116
+  },
+  "handles": [
+    {
+      "handle": "49ers",
+      "platform": "instagram",
+      "accountName": "San Francisco 49ers",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "anatoly evdokimov",
+      "platform": "instagram",
+      "accountName": "Portland Trail Blazers",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "angels",
+      "platform": "instagram",
+      "accountName": "Los Angeles Angels",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "astros",
+      "platform": "instagram",
+      "accountName": "Houston Astros",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "athletics",
+      "platform": "instagram",
+      "accountName": "The Athletics",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "atlantafalcons",
+      "platform": "instagram",
+      "accountName": "Atlanta Falcons",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "atlhawks",
+      "platform": "instagram",
+      "accountName": "Atlanta Hawks",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "azcardinals",
+      "platform": "instagram",
+      "accountName": "Arizona Cardinals",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "bengals",
+      "platform": "instagram",
+      "accountName": "Cincinnati Bengals",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "bluejays",
+      "platform": "instagram",
+      "accountName": "Toronto Blue Jays",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "braves",
+      "platform": "instagram",
+      "accountName": "Atlanta Braves",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "brewers",
+      "platform": "instagram",
+      "accountName": "Milwaukee Brewers",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "broncos",
+      "platform": "instagram",
+      "accountName": "Denver Broncos",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "brooklynnets",
+      "platform": "instagram",
+      "accountName": "Brooklyn Nets",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "buccaneers",
+      "platform": "instagram",
+      "accountName": "Tampa Bay Buccaneers",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "bucks",
+      "platform": "instagram",
+      "accountName": "Milwaukee Bucks",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "buffalobills",
+      "platform": "instagram",
+      "accountName": "Buffalo Bills",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "cardinals",
+      "platform": "instagram",
+      "accountName": "St. Louis Cardinals",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "cavs",
+      "platform": "instagram",
+      "accountName": "Cleveland Cavaliers",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "celtics",
+      "platform": "instagram",
+      "accountName": "Boston Celtics",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "chargers",
+      "platform": "instagram",
+      "accountName": "Los Angeles Chargers",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "chicagobears",
+      "platform": "instagram",
+      "accountName": "Chicago Bears",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "chicagobulls",
+      "platform": "instagram",
+      "accountName": "Chicago Bulls",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "chiefs",
+      "platform": "instagram",
+      "accountName": "Kansas City Chiefs",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "clevelandbrowns",
+      "platform": "instagram",
+      "accountName": "Cleveland Browns",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "colts",
+      "platform": "instagram",
+      "accountName": "Indianapolis Colts",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "commanders",
+      "platform": "instagram",
+      "accountName": "Washington Commanders",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "cubs",
+      "platform": "instagram",
+      "accountName": "Chicago Cubs",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "dallascowboys",
+      "platform": "instagram",
+      "accountName": "Dallas Cowboys",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "dallasmavs",
+      "platform": "instagram",
+      "accountName": "Dallas Mavericks",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "dbacks",
+      "platform": "instagram",
+      "accountName": "Arizona Diamondbacks",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "detroitlionsnfl",
+      "platform": "instagram",
+      "accountName": "Detroit Lions",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "detroitpistons",
+      "platform": "instagram",
+      "accountName": "Detroit Pistons",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "dodgers",
+      "platform": "instagram",
+      "accountName": "Los Angeles Dodgers",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "guardians ig",
+      "platform": "instagram",
+      "accountName": "Cleveland Guardians",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "hornets",
+      "platform": "instagram",
+      "accountName": "Charlotte Hornets",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "houstonrockets",
+      "platform": "instagram",
+      "accountName": "Houston Rockets",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "houstontexans",
+      "platform": "instagram",
+      "accountName": "Houston Texans",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "jaguars",
+      "platform": "instagram",
+      "accountName": "Jacksonville Jaguars",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "jrnba",
+      "platform": "instagram",
+      "accountName": "Junior NBA",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": "both"
+    },
+    {
+      "handle": "jrnbabrasil",
+      "platform": "instagram",
+      "accountName": "Jr. NBA Brasil",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": "male"
+    },
+    {
+      "handle": "kcroyals",
+      "platform": "instagram",
+      "accountName": "Kansas City Royals",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "laclippers",
+      "platform": "instagram",
+      "accountName": "Los Angeles Clippers",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "lakers",
+      "platform": "instagram",
+      "accountName": "Los Angeles Lakers",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "mariners",
+      "platform": "instagram",
+      "accountName": "Seattle Mariners",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "marlins",
+      "platform": "instagram",
+      "accountName": "Miami Marlins",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "memgrizz",
+      "platform": "instagram",
+      "accountName": "Memphis Grizzlies",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "mets",
+      "platform": "instagram",
+      "accountName": "New York Mets",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "miamidolphins",
+      "platform": "instagram",
+      "accountName": "Miami Dolphins",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "miamiheat",
+      "platform": "instagram",
+      "accountName": "Miami Heat",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "mlb",
+      "platform": "instagram",
+      "accountName": "MLB",
+      "league": "MLB",
+      "category": "Sport Leagues",
+      "gender": "male"
+    },
+    {
+      "handle": "mlb.india",
+      "platform": "instagram",
+      "accountName": "MLB India",
+      "league": "MLB",
+      "category": "Sport Leagues",
+      "gender": "male"
+    },
+    {
+      "handle": "mlb.korea",
+      "platform": "instagram",
+      "accountName": "MLB Korea",
+      "league": "MLB",
+      "category": "Sport Leagues",
+      "gender": null
+    },
+    {
+      "handle": "mlbdominicana",
+      "platform": "instagram",
+      "accountName": "MLB Dominicana",
+      "league": "MLB",
+      "category": "Sport Leagues",
+      "gender": null
+    },
+    {
+      "handle": "mlbespanol",
+      "platform": "instagram",
+      "accountName": "MLB Espanol",
+      "league": "MLB",
+      "category": "Sport Leagues",
+      "gender": null
+    },
+    {
+      "handle": "mlbeurope",
+      "platform": "instagram",
+      "accountName": "MLB Europe",
+      "league": "MLB",
+      "category": "Sport Leagues",
+      "gender": null
+    },
+    {
+      "handle": "mlbjapan",
+      "platform": "instagram",
+      "accountName": "MLB Japan",
+      "league": "MLB",
+      "category": "Sport Leagues",
+      "gender": null
+    },
+    {
+      "handle": "mlbmexico",
+      "platform": "instagram",
+      "accountName": "MLB Mexico",
+      "league": "MLB",
+      "category": "Sport Leagues",
+      "gender": null
+    },
+    {
+      "handle": "mlbtaiwan",
+      "platform": "instagram",
+      "accountName": "MLB Taiwan",
+      "league": "MLB",
+      "category": "Sport Leagues",
+      "gender": null
+    },
+    {
+      "handle": "nationals",
+      "platform": "instagram",
+      "accountName": "Washington Nationals",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "nba",
+      "platform": "instagram",
+      "accountName": "NBA",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": "male"
+    },
+    {
+      "handle": "nbaafricaofficial",
+      "platform": "instagram",
+      "accountName": "NBA Africa",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": "both"
+    },
+    {
+      "handle": "nbaaustralia",
+      "platform": "instagram",
+      "accountName": "NBA Australia",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": null
+    },
+    {
+      "handle": "nbabrasil",
+      "platform": "instagram",
+      "accountName": "NBA Brasil",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": null
+    },
+    {
+      "handle": "nbacanada",
+      "platform": "instagram",
+      "accountName": "NBA Canada",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": null
+    },
+    {
+      "handle": "nbaeurope",
+      "platform": "instagram",
+      "accountName": "NBA Europe",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": "both"
+    },
+    {
+      "handle": "nbahistory",
+      "platform": "instagram",
+      "accountName": "NBA History",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": "both"
+    },
+    {
+      "handle": "nbaindia",
+      "platform": "instagram",
+      "accountName": "NBA India",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": "male"
+    },
+    {
+      "handle": "nbaindonesia",
+      "platform": "instagram",
+      "accountName": "NBA Indonesia",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": null
+    },
+    {
+      "handle": "nbajpn",
+      "platform": "instagram",
+      "accountName": "NBA Japan",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": null
+    },
+    {
+      "handle": "nbakicks",
+      "platform": "instagram",
+      "accountName": "NBA Kicks",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": "both"
+    },
+    {
+      "handle": "nbalatam",
+      "platform": "instagram",
+      "accountName": "NBA Latam",
+      "league": "NBA",
+      "category": "Sport Leagues",
+      "gender": "both"
+    },
+    {
+      "handle": "nfl",
+      "platform": "instagram",
+      "accountName": "NFL",
+      "league": "NFL",
+      "category": "Sport Leagues",
+      "gender": "male"
+    },
+    {
+      "handle": "nuggets",
+      "platform": "instagram",
+      "accountName": "Denver Nuggets",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "nygiants",
+      "platform": "instagram",
+      "accountName": "New York Giants",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "nyjets",
+      "platform": "instagram",
+      "accountName": "New York Jets",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "nyknicks",
+      "platform": "instagram",
+      "accountName": "New York Knicks",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "okcthunder",
+      "platform": "instagram",
+      "accountName": "Oklahoma City Thunder",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "orioles",
+      "platform": "instagram",
+      "accountName": "Baltimore Orioles",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "orlandomagic",
+      "platform": "instagram",
+      "accountName": "Orlando Magic",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "pacers",
+      "platform": "instagram",
+      "accountName": "Indiana Pacers",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "packers",
+      "platform": "instagram",
+      "accountName": "Green Bay Packers",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "padres",
+      "platform": "instagram",
+      "accountName": "San Diego Padres",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "panthers",
+      "platform": "instagram",
+      "accountName": "Carolina Panthers",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "patriots",
+      "platform": "instagram",
+      "accountName": "New England Patriots",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "pelicansnba",
+      "platform": "instagram",
+      "accountName": "New Orleans Pelicans",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "philadelphiaeagles",
+      "platform": "instagram",
+      "accountName": "Philadelphia Eagles",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "phillies",
+      "platform": "instagram",
+      "accountName": "Philadelphia Phillies",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "pittsburghpirates",
+      "platform": "instagram",
+      "accountName": "Pittsburgh Pirates",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "raiders",
+      "platform": "instagram",
+      "accountName": "Las Vegas Raiders",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "rams",
+      "platform": "instagram",
+      "accountName": "Los Angeles Rams",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "rangers",
+      "platform": "instagram",
+      "accountName": "Texas Rangers",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "raptors",
+      "platform": "instagram",
+      "accountName": "Toronto Raptors",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "ravens",
+      "platform": "instagram",
+      "accountName": "Baltimore Ravens",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "raysbaseball",
+      "platform": "instagram",
+      "accountName": "Tampa Bay Rays",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "reds",
+      "platform": "instagram",
+      "accountName": "Cincinnati Reds",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "redsox",
+      "platform": "instagram",
+      "accountName": "Boston Red Sox",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "rockies",
+      "platform": "instagram",
+      "accountName": "Colorado Rockies",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "sacramentokings",
+      "platform": "instagram",
+      "accountName": "Sacramento Kings",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "saints",
+      "platform": "instagram",
+      "accountName": "New Orleans Saints",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "seahawks",
+      "platform": "instagram",
+      "accountName": "Seattle Seahawks",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "sfgiants",
+      "platform": "instagram",
+      "accountName": "San Francisco Giants",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "sixers",
+      "platform": "instagram",
+      "accountName": "Philadelphia 76ers",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "spurs",
+      "platform": "instagram",
+      "accountName": "San Antonio Spurs",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "steelers",
+      "platform": "instagram",
+      "accountName": "Pittsburgh Steelers",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "suns",
+      "platform": "instagram",
+      "accountName": "Phoenix Suns",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "tigers",
+      "platform": "instagram",
+      "accountName": "Detroit Tigers",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "timberwolves",
+      "platform": "instagram",
+      "accountName": "Minnesota Timberwolves",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "titans",
+      "platform": "instagram",
+      "accountName": "Tennessee Titans",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "twins",
+      "platform": "instagram",
+      "accountName": "Minnesota Twins",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "utahjazz",
+      "platform": "instagram",
+      "accountName": "Utah Jazz",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "vikings",
+      "platform": "instagram",
+      "accountName": "Minnesota Vikings",
+      "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "warriors",
+      "platform": "instagram",
+      "accountName": "Golden State Warriors",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "washwizards",
+      "platform": "instagram",
+      "accountName": "Washington Wizards",
+      "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "whitesox",
+      "platform": "instagram",
+      "accountName": "Chicago White Sox",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "yankees",
+      "platform": "instagram",
+      "accountName": "New York Yankees",
+      "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    }
+  ]
+}

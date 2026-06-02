@@ -27,6 +27,8 @@ interface Message {
   content: string;
 }
 
+type ChatMode = "global" | "usmajors";
+
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -37,8 +39,28 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [authError, setAuthError] = useState(false);
   const [pendingMessage, setPendingMessage] = useState<string | null>(null);
+  const [mode, setMode] = useState<ChatMode>("global");
   const messagesEnd = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // Restore mode from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem("elcaptain_mode");
+    if (saved === "usmajors" || saved === "global") setMode(saved);
+  }, []);
+
+  function changeMode(next: ChatMode) {
+    if (next === mode) return;
+    if (messages.length > 0) {
+      const ok = window.confirm(
+        "Switching mode will clear the current conversation. Continue?"
+      );
+      if (!ok) return;
+      setMessages([]);
+    }
+    setMode(next);
+    localStorage.setItem("elcaptain_mode", next);
+  }
 
   // Restore password from sessionStorage or check if auth is needed
   useEffect(() => {
@@ -108,7 +130,7 @@ export default function Home() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers,
-        body: JSON.stringify({ messages: msgs }),
+        body: JSON.stringify({ messages: msgs, mode }),
       });
 
       if (res.status === 401) {
@@ -213,14 +235,47 @@ export default function Home() {
           alt="ElCaptain — powered by horizm"
           className="h-10"
         />
-        {messages.length > 0 && (
-          <button
-            onClick={() => setMessages([])}
-            className="rounded-lg border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 transition-colors"
+        <div className="flex items-center gap-3">
+          {/* Mode toggle */}
+          <div
+            role="tablist"
+            aria-label="Data scope"
+            className="inline-flex rounded-full border border-zinc-300 bg-zinc-50 p-0.5 text-xs font-medium"
           >
-            Clear Context
-          </button>
-        )}
+            <button
+              role="tab"
+              aria-selected={mode === "global"}
+              onClick={() => changeMode("global")}
+              className={`px-3 py-1 rounded-full transition-colors ${
+                mode === "global"
+                  ? "bg-white text-zinc-900 shadow-sm border border-zinc-200"
+                  : "text-zinc-500 hover:text-zinc-700"
+              }`}
+            >
+              Global
+            </button>
+            <button
+              role="tab"
+              aria-selected={mode === "usmajors"}
+              onClick={() => changeMode("usmajors")}
+              className={`px-3 py-1 rounded-full transition-colors ${
+                mode === "usmajors"
+                  ? "bg-gradient-to-r from-[#E63371] to-[#7B1FA2] text-white shadow-sm"
+                  : "text-zinc-500 hover:text-zinc-700"
+              }`}
+            >
+              US Majors Deep Dive
+            </button>
+          </div>
+          {messages.length > 0 && (
+            <button
+              onClick={() => setMessages([])}
+              className="rounded-lg border border-zinc-300 px-3 py-1.5 text-xs font-medium text-zinc-500 hover:bg-zinc-100 hover:text-zinc-700 transition-colors"
+            >
+              Clear Context
+            </button>
+          )}
+        </div>
       </header>
 
       {messages.length === 0 ? (
@@ -234,9 +289,9 @@ export default function Home() {
                 className="h-16 mx-auto mb-6"
               />
               <p className="text-zinc-500">
-                Benchmark performance, spot underpriced opportunities, and
-                reallocate with confidence — backed by real data from 15K+
-                teams and creators across 128 countries.
+                {mode === "usmajors"
+                  ? "Sponsorship intelligence for the US Major Leagues — NFL, NBA and MLB. Surface high-engagement content available for activation across 116 official Instagram accounts and 25,000+ posts."
+                  : "Benchmark performance, spot underpriced opportunities, and reallocate with confidence — backed by real data from 15K+ teams and creators across 128 countries."}
               </p>
             </div>
             <form onSubmit={handleSubmit}>
@@ -245,21 +300,40 @@ export default function Home() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask about partnerships, ROI, benchmarks, or budget allocation..."
+                placeholder={
+                  mode === "usmajors"
+                    ? "Ask about top posts, sponsorship opportunities, content series, brand activity..."
+                    : "Ask about partnerships, ROI, benchmarks, or budget allocation..."
+                }
                 rows={3}
                 className="w-full resize-none rounded-xl bg-zinc-50 border border-zinc-300 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-[#E63371] focus:ring-1 focus:ring-[#E63371]"
                 style={{ minHeight: "80px", maxHeight: "200px" }}
               />
             </form>
             <div className="flex flex-col gap-2 text-sm text-zinc-400 mt-4 text-center">
-              <p className="italic">
-                &quot;Which athletes in the UK are generating the highest ROI
-                relative to their audience size?&quot;
-              </p>
-              <p className="italic">
-                &quot;I have $200K to invest in creator partnerships in
-                Brazil. Where should I allocate it?&quot;
-              </p>
+              {mode === "usmajors" ? (
+                <>
+                  <p className="italic">
+                    &quot;Which content series have the highest engagement and
+                    are not yet sponsored?&quot;
+                  </p>
+                  <p className="italic">
+                    &quot;Show me the top 10 NBA posts by engagement
+                    rate.&quot;
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="italic">
+                    &quot;Which athletes in the UK are generating the highest
+                    ROI relative to their audience size?&quot;
+                  </p>
+                  <p className="italic">
+                    &quot;I have $200K to invest in creator partnerships in
+                    Brazil. Where should I allocate it?&quot;
+                  </p>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -311,12 +385,35 @@ export default function Home() {
                             const content = String(children).trim();
                             if (className === "language-html" && content.includes("<")) {
                               return (
-                                <iframe
-                                  srcDoc={content}
-                                  className="w-full rounded-lg border border-zinc-200 my-2"
-                                  style={{ height: "420px" }}
-                                  sandbox="allow-scripts"
-                                />
+                                <div className="relative w-full my-2 group">
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      const iframe = e.currentTarget
+                                        .parentElement?.querySelector("iframe");
+                                      if (iframe?.requestFullscreen) {
+                                        iframe.requestFullscreen();
+                                      }
+                                    }}
+                                    className="absolute top-2 right-2 z-10 rounded-md bg-zinc-900/70 hover:bg-zinc-900 text-white text-[11px] px-2 py-1 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1"
+                                    aria-label="Fullscreen"
+                                    title="Open in fullscreen (ESC to exit)"
+                                  >
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg>
+                                    Fullscreen
+                                  </button>
+                                  <iframe
+                                    srcDoc={content}
+                                    className="w-full rounded-lg border border-zinc-200 bg-white"
+                                    style={{
+                                      height: "70vh",
+                                      maxHeight: "720px",
+                                      minHeight: "420px",
+                                    }}
+                                    sandbox="allow-scripts"
+                                    allow="fullscreen"
+                                  />
+                                </div>
                               );
                             }
                             return (
@@ -326,6 +423,16 @@ export default function Home() {
                             );
                           },
                           pre: ({ children }) => <>{children}</>,
+                          a: ({ href, children }) => (
+                            <a
+                              href={href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[#E63371] underline decoration-[#E63371]/40 hover:decoration-[#E63371] underline-offset-2"
+                            >
+                              {children}
+                            </a>
+                          ),
                         }}
                       >
                         {m.content}
@@ -360,7 +467,11 @@ export default function Home() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Ask about partnerships, ROI, benchmarks, or budget allocation..."
+                placeholder={
+                  mode === "usmajors"
+                    ? "Ask about top posts, sponsorship opportunities, content series, brand activity..."
+                    : "Ask about partnerships, ROI, benchmarks, or budget allocation..."
+                }
                 rows={1}
                 className="flex-1 resize-none rounded-xl bg-zinc-50 border border-zinc-300 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 focus:outline-none focus:border-[#E63371] focus:ring-1 focus:ring-[#E63371]"
                 style={{ maxHeight: "200px" }}
@@ -373,6 +484,11 @@ export default function Home() {
                 Send
               </button>
             </form>
+            {mode === "usmajors" && (
+              <p className="max-w-3xl mx-auto mt-2 text-[11px] text-zinc-400 text-center">
+                US Majors Deep Dive — scope: NFL, NBA, MLB official Instagram accounts and posts
+              </p>
+            )}
           </div>
         </>
       )}

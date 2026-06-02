@@ -1,6 +1,6 @@
 import type { Tool } from "@anthropic-ai/sdk/resources/messages";
 
-export const TOOLS: Tool[] = [
+const ACCOUNT_TOOLS_GLOBAL: Tool[] = [
   {
     name: "search_accounts",
     description:
@@ -168,48 +168,183 @@ export const TOOLS: Tool[] = [
   },
 ];
 
-export const SYSTEM_PROMPT = `You are ElCaptain, an expert social media campaign strategist with access to a real database of 8,356 content creators, athletes, sports teams, and entertainment accounts with economic valuation data.
+const POST_TOOLS: Tool[] = [
+  {
+    name: "get_top_posts",
+    description:
+      "Get the top-ranked individual posts by a chosen metric, with optional filters (league, sponsored, brand, content series). Use for 'best performing posts', 'highest engagement posts', etc.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        metric: {
+          type: "string",
+          enum: ["engRate", "impressions", "engagement", "totalValue"],
+          description:
+            "Ranking metric: engRate (engagement rate), impressions (reach), engagement (interactions), totalValue (USD value)",
+        },
+        league: {
+          type: "string",
+          enum: ["NFL", "NBA", "MLB"],
+          description: "Optional league filter",
+        },
+        sponsored: {
+          type: "boolean",
+          description:
+            "Optional: true = only sponsored posts, false = only unsponsored posts (sponsorship candidates)",
+        },
+        brand: {
+          type: "string",
+          description: "Optional brand filter (matches partial string)",
+        },
+        contentSeries: {
+          type: "string",
+          description: "Optional content series filter (matches partial string)",
+        },
+        limit: { type: "number", description: "Max results (default 10, max 50)" },
+      },
+      required: ["metric"],
+    },
+  },
+  {
+    name: "get_posts_by_account",
+    description:
+      "Get all posts published by a specific account in the current dataset. Returns aggregated stats + top posts by engagement.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        handle: {
+          type: "string",
+          description: "Account handle (e.g., 'lakers', 'okcthunder', 'nba')",
+        },
+        limit: { type: "number", description: "Max top posts returned (default 50)" },
+      },
+      required: ["handle"],
+    },
+  },
+  {
+    name: "get_sponsorship_opportunities",
+    description:
+      "Get posts that are NOT currently sponsored (no brand activation) ranked by engagement rate. These are candidates a brand could sponsor. Use when user asks about 'sponsorship opportunities', 'posts to sponsor', 'untapped content'.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        league: {
+          type: "string",
+          enum: ["NFL", "NBA", "MLB"],
+          description: "Optional league filter",
+        },
+        contentSeries: {
+          type: "string",
+          description: "Optional content series filter",
+        },
+        handle: {
+          type: "string",
+          description: "Optional handle filter",
+        },
+        limit: { type: "number", description: "Max results (default 20)" },
+      },
+    },
+  },
+  {
+    name: "get_content_series_stats",
+    description:
+      "Aggregate stats per content series (Match Full Time, Birthday, etc.): post count, sponsorship density, average engagement, and a sponsorship opportunity score. Use when user asks 'which content series perform best?' or 'which series are good sponsorship candidates?'.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        league: {
+          type: "string",
+          enum: ["NFL", "NBA", "MLB"],
+          description: "Optional league filter",
+        },
+        handle: {
+          type: "string",
+          description: "Optional handle filter",
+        },
+      },
+    },
+  },
+  {
+    name: "get_brand_stats",
+    description:
+      "Get aggregated activity stats for a brand or brand search: how many posts they've activated, across which accounts and leagues, average engagement, and total value.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        brand: {
+          type: "string",
+          description: "Brand name or partial string (e.g., 'Nike', 'ESPN')",
+        },
+      },
+      required: ["brand"],
+    },
+  },
+  {
+    name: "get_league_stats",
+    description:
+      "Get league-level aggregates: total posts, sponsorship density, distinct brands, average engagement, total value.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        league: {
+          type: "string",
+          enum: ["NFL", "NBA", "MLB"],
+          description: "Optional: omit for all leagues combined",
+        },
+      },
+    },
+  },
+  {
+    name: "get_posts_dataset_stats",
+    description:
+      "Get an overview of the posts dataset: date range, total posts, leagues, sponsored ratio, available content series, brand count. Use when user asks what post-level data is available.",
+    input_schema: {
+      type: "object" as const,
+      properties: {},
+    },
+  },
+  {
+    name: "get_accounts_aggregate_from_posts",
+    description:
+      "Aggregate posts BY ACCOUNT and return one row per handle with totals (posts, impressions, engagement, value) and avg engagement rate. Use this whenever the user asks 'which accounts/teams drive X', 'top teams for Y', 'which accounts have most posts in this content series', etc. DO NOT use get_top_posts and then label the rows as accounts — use this tool instead so each row truly represents one account.",
+    input_schema: {
+      type: "object" as const,
+      properties: {
+        league: {
+          type: "string",
+          enum: ["NFL", "NBA", "MLB"],
+          description: "Optional league filter",
+        },
+        sponsored: {
+          type: "boolean",
+          description: "Optional sponsored/unsponsored filter on the underlying posts",
+        },
+        brand: {
+          type: "string",
+          description: "Optional brand filter",
+        },
+        contentSeries: {
+          type: "string",
+          description: "Optional content series filter",
+        },
+        sortBy: {
+          type: "string",
+          enum: ["totalValue", "totalImpressions", "totalEngagement", "avgEngRate", "totalPosts"],
+          description: "Account-level sort metric (default totalValue)",
+        },
+        limit: { type: "number", description: "Max accounts (default 10, max 50)" },
+      },
+    },
+  },
+];
 
-You help users plan social media campaigns by recommending creators, analyzing value efficiency, and providing data-driven insights.
+export const TOOLS_GLOBAL: Tool[] = ACCOUNT_TOOLS_GLOBAL;
 
-## Key metrics
-- **Avg Value Per Post (USD):** The most important metric for campaign planning. This is the price a creator would charge per post — what a brand should expect to pay for a partnership activation. Calculated as totalValue / posts.
-- **Total Value (USD):** The total amount a creator would charge for all their posts in the period. Represents the full cost of partnering with that account.
-- **Engagement Rate (%):** Active audience percentage. Higher = more responsive audience for campaigns. Industry-standard metrics like CPM and CPE can be used in explanations.
-- **Do NOT use Value Per Fan** in campaign conversations — irrelevant for campaign strategy. Always use Avg Value Per Post instead.
-- **Do NOT use the term "PME" or "Paid Media Equivalence"** — it's too technical. Instead, refer to values as "what the creator would charge" or "the cost of a partnership". Industry abbreviations like CPM or CPE are fine.
+// US Majors mode: same account tools (auto-scoped server-side via mode) + post tools
+export const TOOLS_USMAJORS: Tool[] = [...ACCOUNT_TOOLS_GLOBAL, ...POST_TOOLS];
 
-## Audience and territory
-- The "country" field represents the account's home country. When a user asks about reaching audiences in a specific territory (e.g., "I want to reach people in Spain"), treat country as a proxy for the account's audience geography — assume the audience comes predominantly from that country.
-- **Exclude "Global" accounts** from territory-specific queries. If country is "Global", the audience territory is unknown, so these accounts should not be recommended when the user specifies a target territory.
-- If the user does NOT specify a territory, Global accounts can be included.
+// Backwards-compatible export (used by anything that hasn't migrated yet)
+export const TOOLS = TOOLS_GLOBAL;
 
-## Campaign strategy principles
-- For reach: prioritize totalValue and followers
-- For engagement: prioritize engRate
-- For value efficiency (best cost per post): prioritize avgPerPost — sort by avgPerPost to find creators who generate the most value per individual post
-- Micro-influencers (10K-100K) often have higher engagement rates
-- Always query data before recommending — never guess numbers
-
-## Audience
-Your users are brand partnership managers and business development leads — not technical people. Adapt your language accordingly: clear, professional, actionable. No jargon beyond standard industry terms (CPM, CPE, ROI).
-
-## Response quality guidelines
-- **Data presentation:** Always use markdown tables when presenting data for comparison or analysis. Tables make it easy to scan and compare metrics across creators, markets, or categories. Include the most relevant columns for the context (e.g., name, handle, platform, followers, avgValuePerPost, engagementRate).
-- **Explanations and rationale:** Accompany every recommendation or analysis with a clear explanation of WHY. Don't just show numbers — explain what they mean for the user's campaign. For example: "Creator X charges $450 per post with a 4.2% engagement rate — that's 3x the category average, making them a high-impact option for engagement-focused campaigns."
-- **Quantify everything:** Never say "this creator is good" or "strong performance." Always quantify: "40% cheaper than the market average", "engagement rate 2.5x above the category median", "would cost $12K for a 10-post campaign."
-- **Next steps:** At the end of EVERY response, suggest 2-3 concrete next actions the user can take to continue the analysis. These must be logical follow-ups based on the current conversation context. Examples: "Want me to compare these top 3 side by side?", "I can break down the UK market by category to find where the best value is", "Should I look for micro-influencers in this category for a more cost-efficient alternative?"
-- **Readability and spacing:** Use clear visual structure to make dense information easy to scan. Separate sections with headings (##, ###). Use bullet points or numbered lists — never long dense paragraphs. Add a horizontal rule (---) between major sections (e.g., between data analysis and recommendations, between recommendations and next steps). Each strategic option or recommendation block should be its own clearly separated section with a heading.
-
-## Charts and visualizations
-When the user asks for a chart, graph, or visual distribution:
-- Generate a complete, self-contained HTML page using Chart.js from CDN (https://cdn.jsdelivr.net/npm/chart.js)
-- Wrap it in a markdown code block with language "html" (triple backticks html)
-- The frontend will automatically render it as an interactive chart
-- Use light background colors, clean design
-- Do NOT try to write files — just output the HTML in the code block
-- Include all data inline in the HTML (no external files)
-
-Be conversational, direct, and data-driven.
-
-CRITICAL: Always respond in the SAME language the user writes in. If the user writes in English, respond in English. If the user writes in Spanish, respond in Spanish. Match the user's language exactly.`;
+// Re-export prompts for backwards compatibility
+export { SYSTEM_PROMPT_GLOBAL as SYSTEM_PROMPT } from "./prompts";

@@ -1,7 +1,13 @@
 import { spawn } from "child_process";
 import path from "path";
 import Anthropic from "@anthropic-ai/sdk";
-import { TOOLS, SYSTEM_PROMPT } from "@/lib/tools";
+import { TOOLS_GLOBAL, TOOLS_USMAJORS } from "@/lib/tools";
+import {
+  SYSTEM_PROMPT_GLOBAL,
+  SYSTEM_PROMPT_USMAJORS,
+  LOCAL_SYSTEM_PROMPT_GLOBAL,
+  LOCAL_SYSTEM_PROMPT_USMAJORS,
+} from "@/lib/prompts";
 import {
   searchAccounts,
   filterAccounts,
@@ -11,66 +17,52 @@ import {
   compareAccounts,
   getMarketOverview,
 } from "@/lib/data";
+import {
+  searchPosts,
+  getTopPosts,
+  getPostsByAccount,
+  getSponsorshipOpportunities,
+  getContentSeriesStats,
+  getBrandStats,
+  getLeagueStats,
+  getPostsStats,
+  getAccountsAggregate,
+} from "@/lib/posts";
 
 const MODE = process.env.ELCAPTAIN_MODE || "local";
 
+type ChatMode = "global" | "usmajors";
+
+function resolveMode(input: unknown): ChatMode {
+  return input === "usmajors" ? "usmajors" : "global";
+}
+
+function detectLanguage(text: string): "spanish" | "english" {
+  const t = text.toLowerCase();
+  // Spanish-specific characters
+  if (/[áéíóúñü¿¡]/.test(t)) return "spanish";
+  // Spanish common stop words / question starters
+  const spanishCues = [
+    " qué", " cuál", " cuáles", " cómo", " dónde", " cuándo", " quién",
+    "dime ", "dame ", "muéstra", "muestra", "muéstrame", "muestrame",
+    " los ", " las ", " del ", " para ", " porque", " entonces",
+    " gracias", " hola", " buenos", " buenas", " perfecto",
+    " sí ", " sí.", " sí,", " quiero",
+  ];
+  if (spanishCues.some((w) => t.includes(w))) return "spanish";
+  return "english";
+}
+
+function languageDirective(text: string): string {
+  const lang = detectLanguage(text);
+  return lang === "spanish"
+    ? "The user's last message is in SPANISH. Reply ENTIRELY in Spanish."
+    : "The user's last message is in ENGLISH. Reply ENTIRELY in English.";
+}
+
 // --- Local mode: Claude Code CLI (Max subscription) ---
 
-const LOCAL_SYSTEM_PROMPT = `You are ElCaptain, an expert social media campaign strategist with access to a real database of 8,356 content creators, athletes, sports teams, and entertainment accounts with economic valuation data (PME — Paid Media Equivalence).
-
-You help users plan social media campaigns by recommending creators, analyzing value efficiency, and providing data-driven insights.
-
-## How to query data
-
-You have a query script. Run it using Bash:
-
-  node scripts/query-data.mjs <command> [args]
-
-Commands:
-  search <query> [--limit N]                    — Search by name or handle
-  top <avgPerPost|totalValue|engRate> [--category X] [--country X] [--platform instagram|tiktok] [--limit N]  — Top accounts by metric
-  detail <instagram|tiktok> <handle>            — Full details for one account
-  filter [--category X] [--country X] [--platform X] [--minFollowers N] [--maxFollowers N] [--sortBy avgPerPost|totalValue|engRate|followers] [--limit N]  — Filter accounts
-  compare <platform/handle> <platform/handle>   — Compare accounts side by side
-  market [country] [--category X] [--platform instagram|tiktok] — Full market overview with flexible filters. Groups automatically: by category (if country given), by top countries (if category given), by platform (if both given). Use this for budget allocation and market analysis — one call replaces many.
-  stats                                          — Database overview
-
-Categories: Athletes, Entertainment, Media & Creators, Sports Teams, Sports Organizations
-Platforms: instagram, tiktok
-
-## Key metrics
-- **Avg Value Per Post (USD):** The most important metric for campaign planning. This is the price a creator would charge per post — what a brand should expect to pay for a partnership activation. Calculated as totalValue / posts.
-- **Total Value (USD):** The total amount a creator would charge for all their posts in the period. Represents the full cost of partnering with that account.
-- **Engagement Rate (%):** Active audience percentage. Higher = more responsive audience for campaigns. Industry-standard metrics like CPM and CPE can be used in explanations.
-- **Do NOT use Value Per Fan** in campaign conversations — irrelevant for campaign strategy. Always use Avg Value Per Post instead.
-- **Do NOT use the term "PME" or "Paid Media Equivalence"** — it's too technical. Instead, refer to values as "what the creator would charge" or "the cost of a partnership". Industry abbreviations like CPM or CPE are fine.
-
-## Audience and territory
-- The "country" field represents the account's home country. When a user asks about reaching audiences in a specific territory (e.g., "I want to reach people in Spain"), treat country as a proxy for the account's audience geography — assume the audience comes predominantly from that country.
-- **Exclude "Global" accounts** from territory-specific queries. If country is "Global", the audience territory is unknown, so these accounts should not be recommended when the user specifies a target territory.
-- If the user does NOT specify a territory, Global accounts can be included.
-
-## Campaign strategy principles
-- For reach: prioritize totalValue and followers
-- For engagement: prioritize engRate
-- For value efficiency (best cost per post): prioritize avgPerPost — sort by avgPerPost to find creators who generate the most value per individual post
-- Micro-influencers (10K-100K) often have higher engagement rates
-- Always query data before recommending — never guess numbers
-
-## Charts and visualizations
-When the user asks for a chart, graph, or visual distribution:
-- Generate a complete, self-contained HTML page using Chart.js from CDN (https://cdn.jsdelivr.net/npm/chart.js)
-- Wrap it in a markdown code block with language "html" (triple backticks html)
-- The frontend will automatically render it as an interactive chart
-- Use light background colors, clean design
-- Do NOT try to write files — just output the HTML in the code block
-- Include all data inline in the HTML (no external files)
-
-Be conversational, direct, and data-driven.
-
-CRITICAL: Always respond in the SAME language the user writes in. If the user writes in English, respond in English. If the user writes in Spanish, respond in Spanish. Match the user's language exactly.`;
-
-function callClaudeLocal(prompt: string): Promise<string> {
+function callClaudeLocal(prompt: string, chatMode: ChatMode): Promise<string> {
   return new Promise((resolve, reject) => {
     const child = spawn(
       "/Users/joseda/.local/bin/claude",
@@ -82,11 +74,9 @@ function callClaudeLocal(prompt: string): Promise<string> {
       ],
       {
         env: (() => {
-          // Pass all env vars EXCEPT ANTHROPIC_API_KEY.
-          // If the API key leaks to the CLI, it uses API credits
-          // instead of the Max subscription.
           const env = { ...process.env };
           delete env.ANTHROPIC_API_KEY;
+          env.ELCAPTAIN_CHAT_MODE = chatMode;
           return env;
         })(),
         cwd: path.resolve(process.cwd()),
@@ -124,7 +114,10 @@ function callClaudeLocal(prompt: string): Promise<string> {
   });
 }
 
-async function handleLocal(messages: { role: string; content: string }[]): Promise<string> {
+async function handleLocal(
+  messages: { role: string; content: string }[],
+  chatMode: ChatMode,
+): Promise<string> {
   const conversationText = messages
     .map((m) => {
       const prefix = m.role === "user" ? "User" : "Assistant";
@@ -132,15 +125,33 @@ async function handleLocal(messages: { role: string; content: string }[]): Promi
     })
     .join("\n\n");
 
-  const fullPrompt = `${LOCAL_SYSTEM_PROMPT}
+  const baseSystemPrompt =
+    chatMode === "usmajors"
+      ? LOCAL_SYSTEM_PROMPT_USMAJORS
+      : LOCAL_SYSTEM_PROMPT_GLOBAL;
+
+  const lastUser = [...messages].reverse().find((m) => m.role === "user");
+  const langHint = lastUser ? languageDirective(lastUser.content) : "";
+  const systemPrompt = langHint
+    ? `${langHint}\n\n${baseSystemPrompt}`
+    : baseSystemPrompt;
+
+  const scopeHint =
+    chatMode === "usmajors"
+      ? "When you run account commands (search/top/filter/detail/stats), pass --mode usmajors to scope to NFL/NBA/MLB accounts."
+      : "";
+
+  const fullPrompt = `${systemPrompt}
 
 ## Conversation so far
 
 ${conversationText}
 
-Respond to the user's latest message. If you need data, use Bash to run the query script (working directory: ${process.cwd()}). Always query data before making recommendations.`;
+Respond to the user's latest message. If you need data, use Bash to run the query script (working directory: ${process.cwd()}). ${scopeHint} Always query data before making recommendations.
 
-  return callClaudeLocal(fullPrompt);
+${langHint}`;
+
+  return callClaudeLocal(fullPrompt, chatMode);
 }
 
 // --- Remote mode: Anthropic SDK (API key) ---
@@ -155,26 +166,68 @@ function getAnthropicClient(): Anthropic {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function executeTool(name: string, input: any): unknown {
+function executeTool(name: string, input: any, chatMode: ChatMode): unknown {
+  const scope = chatMode === "usmajors" ? "usmajors" : "global";
   switch (name) {
     case "search_accounts":
-      return searchAccounts(input.query, input.limit);
+      return searchAccounts(input.query, input.limit, scope);
     case "filter_accounts":
-      return filterAccounts(input);
+      return filterAccounts({ ...input, scope });
     case "get_account_detail":
-      return getAccountDetail(input.platform, input.handle);
+      return getAccountDetail(input.platform, input.handle, scope);
     case "get_top_accounts":
       return getTopAccounts(input.metric, {
         category: input.category,
         country: input.country,
         platform: input.platform,
+        scope,
       }, input.limit);
     case "get_database_stats":
-      return getStats();
+      return getStats(scope);
     case "compare_accounts":
-      return compareAccounts(input.accounts);
+      return compareAccounts(input.accounts, scope);
     case "get_market_overview":
-      return getMarketOverview(input);
+      return getMarketOverview({ ...input, scope });
+    // Posts tools — only available in usmajors mode
+    case "get_top_posts":
+      return getTopPosts(input.metric, {
+        league: input.league,
+        sponsored: input.sponsored,
+        brand: input.brand,
+        contentSeries: input.contentSeries,
+      }, input.limit);
+    case "get_posts_by_account":
+      return getPostsByAccount(input.handle, input.limit);
+    case "get_sponsorship_opportunities":
+      return getSponsorshipOpportunities({
+        league: input.league,
+        contentSeries: input.contentSeries,
+        handle: input.handle,
+      }, input.limit);
+    case "get_content_series_stats":
+      return getContentSeriesStats({
+        league: input.league,
+        handle: input.handle,
+      });
+    case "get_brand_stats":
+      return getBrandStats(input.brand);
+    case "get_league_stats":
+      return getLeagueStats(input.league);
+    case "get_posts_dataset_stats":
+      return getPostsStats();
+    case "search_posts":
+      return searchPosts(input.query, input.limit);
+    case "get_accounts_aggregate_from_posts":
+      return getAccountsAggregate(
+        {
+          league: input.league,
+          sponsored: input.sponsored,
+          brand: input.brand,
+          contentSeries: input.contentSeries,
+        },
+        input.sortBy,
+        input.limit
+      );
     default:
       return { error: `Unknown tool: ${name}` };
   }
@@ -195,20 +248,29 @@ function needsOpus(messages: { role: string; content: string }[]): boolean {
   return VISUAL_KEYWORDS.some((kw) => text.includes(kw));
 }
 
-async function handleRemote(messages: { role: string; content: string }[]): Promise<string> {
+async function handleRemote(
+  messages: { role: string; content: string }[],
+  chatMode: ChatMode,
+): Promise<string> {
   const client = getAnthropicClient();
   const useOpus = needsOpus(messages);
   const model = useOpus ? "claude-opus-4-6" : "claude-sonnet-4-6";
   const maxTokens = useOpus ? 8192 : 4096;
+
+  const tools = chatMode === "usmajors" ? TOOLS_USMAJORS : TOOLS_GLOBAL;
+  const baseSystemPrompt =
+    chatMode === "usmajors" ? SYSTEM_PROMPT_USMAJORS : SYSTEM_PROMPT_GLOBAL;
+  const lastUser = [...messages].reverse().find((m) => m.role === "user");
+  const langHint = lastUser ? languageDirective(lastUser.content) : "";
+  const systemPrompt = langHint
+    ? `${langHint}\n\n${baseSystemPrompt}`
+    : baseSystemPrompt;
 
   const sdkMessages: Anthropic.MessageParam[] = messages.map((m) => ({
     role: m.role as "user" | "assistant",
     content: m.content,
   }));
 
-  // Mark the last user message from conversation history for multi-turn caching.
-  // This caches system + tools + all prior turns, so each tool use iteration
-  // only pays for the new tool results.
   if (sdkMessages.length >= 3) {
     const lastUserIdx = sdkMessages.findLastIndex((m) => m.role === "user");
     if (lastUserIdx >= 0 && typeof sdkMessages[lastUserIdx].content === "string") {
@@ -235,11 +297,11 @@ async function handleRemote(messages: { role: string; content: string }[]): Prom
       system: [
         {
           type: "text",
-          text: SYSTEM_PROMPT,
+          text: systemPrompt,
           cache_control: { type: "ephemeral" },
         },
       ],
-      tools: TOOLS,
+      tools,
       messages: currentMessages,
     });
 
@@ -258,7 +320,7 @@ async function handleRemote(messages: { role: string; content: string }[]): Prom
       const toolResults: Anthropic.ToolResultBlockParam[] = toolUseBlocks.map((block) => ({
         type: "tool_result" as const,
         tool_use_id: block.id,
-        content: JSON.stringify(executeTool(block.name, block.input)),
+        content: JSON.stringify(executeTool(block.name, block.input, chatMode)),
       }));
 
       currentMessages = [
@@ -270,7 +332,6 @@ async function handleRemote(messages: { role: string; content: string }[]): Prom
       continue;
     }
 
-    // Unexpected stop reason — return whatever text we have
     const fallbackText = response.content
       .filter((block): block is Anthropic.TextBlock => block.type === "text")
       .map((b) => b.text)
@@ -284,9 +345,9 @@ async function handleRemote(messages: { role: string; content: string }[]): Prom
 // --- POST handler ---
 
 export async function POST(request: Request) {
-  const { messages } = await request.json();
+  const { messages, mode } = await request.json();
+  const chatMode = resolveMode(mode);
 
-  // Auth check for remote mode
   if (MODE === "remote") {
     const authHeader = request.headers.get("Authorization");
     const expected = process.env.ELCAPTAIN_PASSWORD;
@@ -301,8 +362,8 @@ export async function POST(request: Request) {
 
   try {
     const response = MODE === "remote"
-      ? await handleRemote(messages)
-      : await handleLocal(messages);
+      ? await handleRemote(messages, chatMode)
+      : await handleLocal(messages, chatMode);
 
     return Response.json({ response });
   } catch (error: unknown) {

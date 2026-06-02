@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { getUsMajorsHandleSet } from "./usMajors";
 
 export interface Account {
   handle: string;
@@ -101,10 +102,18 @@ function mapCategory(raw: string): string {
 
 // Tool implementations
 
-export function searchAccounts(query: string, limit = 10) {
+function scopedAccounts(scope?: "global" | "usmajors"): Account[] {
   const data = loadData();
+  if (scope !== "usmajors") return data.accounts;
+  const whitelist = getUsMajorsHandleSet();
+  return data.accounts.filter(
+    (a) => a.platform === "instagram" && whitelist.has(a.handle.toLowerCase())
+  );
+}
+
+export function searchAccounts(query: string, limit = 10, scope?: "global" | "usmajors") {
   const q = query.toLowerCase();
-  const results = data.accounts
+  const results = scopedAccounts(scope)
     .filter(
       (a) =>
         a.name.toLowerCase().includes(q) || a.handle.toLowerCase().includes(q)
@@ -121,9 +130,9 @@ export function filterAccounts(filters: {
   maxFollowers?: number;
   sortBy?: "avgPerPost" | "totalValue" | "engRate" | "followers";
   limit?: number;
+  scope?: "global" | "usmajors";
 }) {
-  const data = loadData();
-  let results = data.accounts;
+  let results = scopedAccounts(filters.scope);
 
   if (filters.category) {
     const cat = filters.category.toLowerCase();
@@ -160,9 +169,8 @@ export function filterAccounts(filters: {
   return results.slice(0, filters.limit || 20).map(formatAccount);
 }
 
-export function getAccountDetail(platform: string, handle: string) {
-  const data = loadData();
-  const account = data.accounts.find(
+export function getAccountDetail(platform: string, handle: string, scope?: "global" | "usmajors") {
+  const account = scopedAccounts(scope).find(
     (a) =>
       a.platform === platform &&
       (a.handle.toLowerCase() === handle.toLowerCase() ||
@@ -174,11 +182,10 @@ export function getAccountDetail(platform: string, handle: string) {
 
 export function getTopAccounts(
   metric: "avgPerPost" | "totalValue" | "engRate",
-  filters?: { category?: string; country?: string; platform?: string },
+  filters?: { category?: string; country?: string; platform?: string; scope?: "global" | "usmajors" },
   limit = 10
 ) {
-  const data = loadData();
-  let results = data.accounts;
+  let results = scopedAccounts(filters?.scope);
 
   if (filters?.category) {
     const cat = filters.category.toLowerCase();
@@ -207,13 +214,22 @@ export function getTopAccounts(
   return results.slice(0, limit).map(formatAccount);
 }
 
-export function getStats() {
+export function getStats(scope?: "global" | "usmajors") {
   const data = loadData();
-  const categories = new Set(data.accounts.map((a) => mapCategory(a.category)));
-  const countries = new Set(
-    data.accounts.map((a) => a.country || "Global")
-  );
+  const pool = scopedAccounts(scope);
+  const categories = new Set(pool.map((a) => mapCategory(a.category)));
+  const countries = new Set(pool.map((a) => a.country || "Global"));
 
+  if (scope === "usmajors") {
+    return {
+      scope: "usmajors",
+      totalAccounts: pool.length,
+      platforms: { instagram: pool.length, tiktok: 0 },
+      categories: Array.from(categories).sort(),
+      countriesCount: countries.size,
+      note: "Account-level data scoped to NFL/NBA/MLB official Instagram accounts.",
+    };
+  }
   return {
     totalAccounts: data.meta.totalAccounts,
     platforms: data.meta.platforms,
@@ -225,10 +241,11 @@ export function getStats() {
 }
 
 export function compareAccounts(
-  accounts: { platform: string; handle: string }[]
+  accounts: { platform: string; handle: string }[],
+  scope?: "global" | "usmajors"
 ) {
   return accounts
-    .map((a) => getAccountDetail(a.platform, a.handle))
+    .map((a) => getAccountDetail(a.platform, a.handle, scope))
     .filter(Boolean);
 }
 
@@ -236,9 +253,9 @@ export function getMarketOverview(filters: {
   country?: string;
   category?: string;
   platform?: string;
+  scope?: "global" | "usmajors";
 }) {
-  const data = loadData();
-  let pool = data.accounts;
+  let pool = scopedAccounts(filters.scope);
 
   if (filters.country) {
     const c = filters.country.toLowerCase();

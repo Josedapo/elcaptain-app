@@ -294,19 +294,26 @@ async function handleRemote(
   const MAX_ITERATIONS = 10;
 
   for (let i = 0; i < MAX_ITERATIONS; i++) {
-    const response = await client.messages.create({
-      model,
-      max_tokens: maxTokens,
-      system: [
-        {
-          type: "text",
-          text: systemPrompt,
-          cache_control: { type: "ephemeral" },
-        },
-      ],
-      tools,
-      messages: currentMessages,
-    });
+    // Use streaming under the hood so the SDK doesn't refuse high
+    // max_tokens (needed for long presentations) with the "Streaming
+    // is required for operations that may take longer than 10 minutes"
+    // error. finalMessage() collects the stream and returns the same
+    // Message object create() would have returned.
+    const response = await client.messages
+      .stream({
+        model,
+        max_tokens: maxTokens,
+        system: [
+          {
+            type: "text",
+            text: systemPrompt,
+            cache_control: { type: "ephemeral" },
+          },
+        ],
+        tools,
+        messages: currentMessages,
+      })
+      .finalMessage();
 
     if (response.stop_reason === "end_turn") {
       const textBlocks = response.content.filter(

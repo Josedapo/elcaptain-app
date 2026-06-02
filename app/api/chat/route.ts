@@ -255,7 +255,10 @@ async function handleRemote(
   const client = getAnthropicClient();
   const useOpus = needsOpus(messages);
   const model = useOpus ? "claude-opus-4-6" : "claude-sonnet-4-6";
-  const maxTokens = useOpus ? 8192 : 4096;
+  // Opus is reached for visual/presentation requests; allow a much larger
+  // output window so multi-slide decks (10+ slides of HTML) don't get
+  // truncated mid-generation.
+  const maxTokens = useOpus ? 32000 : 4096;
 
   const tools = chatMode === "usmajors" ? TOOLS_USMAJORS : TOOLS_GLOBAL;
   const baseSystemPrompt =

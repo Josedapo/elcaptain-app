@@ -56,6 +56,14 @@ When the user asks for a chart, graph, dashboard, slide deck or "presentation":
   - Use \`100vh\`/\`100vw\` for slide containers so they scale up correctly in fullscreen.
 - Include all data inline in the HTML (no external files). Use light, clean design.
 
+# Output budget for multi-slide presentations — CRITICAL
+The model's output is bounded. If you exceed the budget mid-HTML, the user sees only the first slide and broken navigation. To stay safe:
+- ONE shared <style> block at the top. Reuse classes (\`.slide\`, \`.metric\`, \`.kpi\`, etc.) across every slide. Do not redeclare CSS per slide.
+- ONE shared <script> block at the bottom for navigation. Do not duplicate JS.
+- Each slide's markup should be compact: structural divs only, no decorative wrappers.
+- For a 10-slide deck, aim for roughly 1.5K tokens of HTML per slide on average. If you feel the response getting long, simplify or drop optional flourishes — never sacrifice the closing tags or the navigation script.
+- The last lines of your output MUST close the document: \`</script></body></html>\` followed by the closing markdown fence (three backticks). If you ever feel close to the limit, prioritise getting these out over additional content.
+
 Be conversational, direct, and data-driven.
 
 Reminder: respond in the SAME language as the user's LAST message — see the LANGUAGE block at the top of these instructions.`;
@@ -144,6 +152,14 @@ When the user asks for a chart, graph, dashboard, slide deck or "presentation":
 - Design content to be legible at both sizes: avoid cramming dense content per slide; prefer fewer items over tiny fonts. Use \`100vh\`/\`100vw\` for slide containers so they scale up correctly in fullscreen.
 - Include all data inline. Use light, clean design.
 
+# Output budget for multi-slide presentations — CRITICAL
+The model's output is bounded. If you exceed the budget mid-HTML, the user sees only the first slide and broken navigation. To stay safe:
+- ONE shared <style> block at the top. Reuse classes (\`.slide\`, \`.metric\`, \`.kpi\`, etc.) across every slide. Do not redeclare CSS per slide.
+- ONE shared <script> block at the bottom for navigation. Do not duplicate JS.
+- Each slide's markup should be compact: structural divs only, no decorative wrappers.
+- For a 10-slide deck, aim for roughly 1.5K tokens of HTML per slide on average. If you feel the response getting long, simplify or drop optional flourishes — never sacrifice the closing tags or the navigation script.
+- The last lines of your output MUST close the document: \`</script></body></html>\` followed by the closing markdown fence (three backticks). If you ever feel close to the limit, prioritise getting these out over additional content.
+
 Be conversational, direct, and data-driven.
 
 Reminder: respond in the SAME language as the user's LAST message — see the LANGUAGE block at the top of these instructions.`;
@@ -211,6 +227,8 @@ When the user asks for a chart, graph, dashboard, slide deck or "presentation":
 - DO NOT add your own "press F for fullscreen" or "click to expand" hints inside the HTML — the shell handles it; keyboard shortcuts inside a sandboxed iframe will not work as expected.
 - Use \`100vh\`/\`100vw\` for slide containers so they scale up correctly when the user expands to fullscreen.
 - Avoid cramming dense content per slide; prefer fewer items over tiny fonts.
+
+For multi-slide decks: ONE shared <style> block at the top, ONE shared <script> block at the bottom for navigation, compact per-slide markup. The output MUST end with the closing tags and the closing markdown fence — never sacrifice them to fit more content.
 
 Be conversational, direct, and data-driven.
 
@@ -305,6 +323,8 @@ Self-contained HTML wrapped in \`\`\`html block. The chat UI renders it in an if
 - DO NOT add your own "press F for fullscreen" or expand hints; the shell handles it.
 - Use \`100vh\`/\`100vw\` for slide containers so they scale up in fullscreen.
 - Avoid dense slides; prefer fewer items over tiny fonts.
+
+For multi-slide decks: ONE shared <style> block at the top, ONE shared <script> block at the bottom for navigation, compact per-slide markup. The output MUST end with the closing tags and the closing markdown fence — never sacrifice them to fit more content.
 
 Be conversational, direct, and data-driven.
 

@@ -61,6 +61,7 @@ The model's output is bounded. If you exceed the budget mid-HTML, the user sees 
 - ONE shared <style> block at the top. Reuse classes (\`.slide\`, \`.metric\`, \`.kpi\`, etc.) across every slide. Do not redeclare CSS per slide.
 - ONE shared <script> block at the bottom for navigation. Do not duplicate JS.
 - Each slide's markup should be compact: structural divs only, no decorative wrappers.
+- HARD CAP on length: target 10 slides, never exceed 12. If the analysis warrants more, prioritise the business and sponsorship insights and summarise — do NOT add slides. One key idea per slide, concise bullets, never dense paragraphs.
 - For a 10-slide deck, aim for roughly 1.5K tokens of HTML per slide on average. If you feel the response getting long, simplify or drop optional flourishes — never sacrifice the closing tags or the navigation script.
 - The last lines of your output MUST close the document: \`</script></body></html>\` followed by the closing markdown fence (three backticks). If you ever feel close to the limit, prioritise getting these out over additional content.
 
@@ -157,6 +158,7 @@ The model's output is bounded. If you exceed the budget mid-HTML, the user sees 
 - ONE shared <style> block at the top. Reuse classes (\`.slide\`, \`.metric\`, \`.kpi\`, etc.) across every slide. Do not redeclare CSS per slide.
 - ONE shared <script> block at the bottom for navigation. Do not duplicate JS.
 - Each slide's markup should be compact: structural divs only, no decorative wrappers.
+- HARD CAP on length: target 10 slides, never exceed 12. If the analysis warrants more, prioritise the business and sponsorship insights and summarise — do NOT add slides. One key idea per slide, concise bullets, never dense paragraphs.
 - For a 10-slide deck, aim for roughly 1.5K tokens of HTML per slide on average. If you feel the response getting long, simplify or drop optional flourishes — never sacrifice the closing tags or the navigation script.
 - The last lines of your output MUST close the document: \`</script></body></html>\` followed by the closing markdown fence (three backticks). If you ever feel close to the limit, prioritise getting these out over additional content.
 
@@ -228,7 +230,7 @@ When the user asks for a chart, graph, dashboard, slide deck or "presentation":
 - Use \`100vh\`/\`100vw\` for slide containers so they scale up correctly when the user expands to fullscreen.
 - Avoid cramming dense content per slide; prefer fewer items over tiny fonts.
 
-For multi-slide decks: ONE shared <style> block at the top, ONE shared <script> block at the bottom for navigation, compact per-slide markup. The output MUST end with the closing tags and the closing markdown fence — never sacrifice them to fit more content.
+For multi-slide decks: target 10 slides, never exceed 12 — if the analysis warrants more, prioritise the business and sponsorship insights and summarise rather than adding slides. One key idea per slide, concise bullets, never dense paragraphs. Keep ONE shared <style> block at the top, ONE shared <script> block at the bottom for navigation, compact per-slide markup. The output MUST end with the closing tags and the closing markdown fence — never sacrifice them to fit more content.
 
 Be conversational, direct, and data-driven.
 
@@ -324,7 +326,7 @@ Self-contained HTML wrapped in \`\`\`html block. The chat UI renders it in an if
 - Use \`100vh\`/\`100vw\` for slide containers so they scale up in fullscreen.
 - Avoid dense slides; prefer fewer items over tiny fonts.
 
-For multi-slide decks: ONE shared <style> block at the top, ONE shared <script> block at the bottom for navigation, compact per-slide markup. The output MUST end with the closing tags and the closing markdown fence — never sacrifice them to fit more content.
+For multi-slide decks: target 10 slides, never exceed 12 — if the analysis warrants more, prioritise the business and sponsorship insights and summarise rather than adding slides. One key idea per slide, concise bullets, never dense paragraphs. Keep ONE shared <style> block at the top, ONE shared <script> block at the bottom for navigation, compact per-slide markup. The output MUST end with the closing tags and the closing markdown fence — never sacrifice them to fit more content.
 
 Be conversational, direct, and data-driven.
 

@@ -292,6 +292,10 @@ async function handleRemote(
 
   let currentMessages = [...sdkMessages];
   const MAX_ITERATIONS = 10;
+  // Accumulates text across continuation rounds. When a long presentation
+  // hits the output cap (stop_reason === "max_tokens"), the deck is split
+  // across several responses and concatenated here.
+  let accumulatedText = "";
 
   for (let i = 0; i < MAX_ITERATIONS; i++) {
     // Use streaming under the hood so the SDK doesn't refuse high
@@ -315,11 +319,27 @@ async function handleRemote(
       })
       .finalMessage();
 
+    const responseText = response.content
+      .filter((block): block is Anthropic.TextBlock => block.type === "text")
+      .map((b) => b.text)
+      .join("\n");
+
     if (response.stop_reason === "end_turn") {
-      const textBlocks = response.content.filter(
-        (block): block is Anthropic.TextBlock => block.type === "text"
-      );
-      return textBlocks.map((b) => b.text).join("\n");
+      return accumulatedText + responseText;
+    }
+
+    if (response.stop_reason === "max_tokens") {
+      // Output cap reached mid-generation (typically a long multi-slide
+      // deck). Keep the partial assistant turn, ask the model to resume,
+      // and accumulate. Concatenating WITHOUT a separator preserves HTML
+      // continuity across the seam so closing tags / navigation survive.
+      accumulatedText += responseText;
+      currentMessages = [
+        ...currentMessages,
+        { role: "assistant", content: responseText },
+        { role: "user", content: "continue" },
+      ];
+      continue;
     }
 
     if (response.stop_reason === "tool_use") {
@@ -342,14 +362,13 @@ async function handleRemote(
       continue;
     }
 
-    const fallbackText = response.content
-      .filter((block): block is Anthropic.TextBlock => block.type === "text")
-      .map((b) => b.text)
-      .join("\n");
-    return fallbackText || "No response generated.";
+    return accumulatedText + responseText || "No response generated.";
   }
 
-  return "The query required too many data lookups. Please try a simpler question.";
+  // Ran out of iterations. If a very long deck needed more continuation
+  // rounds than allowed, return what was assembled rather than a misleading
+  // "too many data lookups" message.
+  return accumulatedText || "The query required too many data lookups. Please try a simpler question.";
 }
 
 // --- POST handler ---

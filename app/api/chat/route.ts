@@ -241,11 +241,22 @@ const VISUAL_KEYWORDS = [
   "panoramic", "panorámico", "panoramico",
 ];
 
+// If the most recent assistant turn produced an HTML block, the
+// conversation is mid-presentation ("deck mode"). Follow-ups like
+// "compare X", "map Y" or "go deeper" are deck requests even without a
+// visual keyword, so they must keep Opus + the large output budget instead
+// of dropping to Sonnet @ the low default cap and truncating.
+function inDeckMode(messages: { role: string; content: string }[]): boolean {
+  const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant");
+  return !!lastAssistant && lastAssistant.content.toLowerCase().includes("```html");
+}
+
 function needsOpus(messages: { role: string; content: string }[]): boolean {
   const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
   if (!lastUserMsg) return false;
   const text = lastUserMsg.content.toLowerCase();
-  return VISUAL_KEYWORDS.some((kw) => text.includes(kw));
+  if (VISUAL_KEYWORDS.some((kw) => text.includes(kw))) return true;
+  return inDeckMode(messages);
 }
 
 async function handleRemote(
@@ -255,10 +266,13 @@ async function handleRemote(
   const client = getAnthropicClient();
   const useOpus = needsOpus(messages);
   const model = useOpus ? "claude-opus-4-6" : "claude-sonnet-4-6";
-  // Opus is reached for visual/presentation requests; allow a much larger
-  // output window so multi-slide decks (10+ slides of HTML) don't get
-  // truncated mid-generation.
-  const maxTokens = useOpus ? 32000 : 4096;
+  // Opus (visual/deck path) gets a large output window so multi-slide decks
+  // don't truncate. The Sonnet floor is 16K, not 4K: max_tokens is a ceiling
+  // billed per token actually generated, so raising it costs nothing unless
+  // used, and it stops normal replies that happen to include HTML/tables
+  // from being cut off. The max_tokens continuation loop below is the final
+  // backstop if either cap is still reached.
+  const maxTokens = useOpus ? 32000 : 16000;
 
   const tools = chatMode === "usmajors" ? TOOLS_USMAJORS : TOOLS_GLOBAL;
   const baseSystemPrompt =

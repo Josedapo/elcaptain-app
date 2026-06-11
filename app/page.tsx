@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
-import ReactMarkdown from "react-markdown";
+import { useState, useRef, useEffect, useCallback, memo } from "react";
+import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 const THINKING_WORDS = [
@@ -28,6 +28,107 @@ interface Message {
 }
 
 type ChatMode = "global" | "usmajors";
+
+// Defined at module scope (stable identity) so ReactMarkdown does not remount
+// its subtree — and the embedded <iframe> — on every parent re-render. When
+// this object was recreated inline per render, typing in the input box
+// remounted the chart/deck iframe on each keystroke, causing visible flicker.
+const markdownComponents: Components = {
+  table: ({ children }) => (
+    <div className="overflow-x-auto my-2">
+      <table className="min-w-full text-xs border-collapse">{children}</table>
+    </div>
+  ),
+  th: ({ children }) => (
+    <th className="border border-zinc-300 bg-zinc-200 px-2 py-1 text-left font-semibold">
+      {children}
+    </th>
+  ),
+  td: ({ children }) => (
+    <td className="border border-zinc-300 px-2 py-1">{children}</td>
+  ),
+  code: ({ className, children }) => {
+    const content = String(children).trim();
+    if (className === "language-html" && content.includes("<")) {
+      return (
+        <div className="relative w-full my-2 group">
+          <button
+            type="button"
+            onClick={(e) => {
+              const iframe = e.currentTarget
+                .parentElement?.querySelector("iframe");
+              if (iframe?.requestFullscreen) {
+                iframe.requestFullscreen();
+              }
+            }}
+            className="absolute top-2 right-2 z-10 rounded-md bg-zinc-900/70 hover:bg-zinc-900 text-white text-[11px] px-2 py-1 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1"
+            aria-label="Fullscreen"
+            title="Open in fullscreen (ESC to exit)"
+          >
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg>
+            Fullscreen
+          </button>
+          <iframe
+            srcDoc={content}
+            className="w-full rounded-lg border border-zinc-200 bg-white"
+            style={{
+              height: "70vh",
+              maxHeight: "720px",
+              minHeight: "420px",
+            }}
+            sandbox="allow-scripts"
+            allow="fullscreen"
+          />
+        </div>
+      );
+    }
+    return (
+      <code className={`${className || ""} bg-zinc-200 px-1 py-0.5 rounded text-xs`}>
+        {children}
+      </code>
+    );
+  },
+  pre: ({ children }) => <>{children}</>,
+  a: ({ href, children }) => (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-[#E63371] underline decoration-[#E63371]/40 hover:decoration-[#E63371] underline-offset-2"
+    >
+      {children}
+    </a>
+  ),
+};
+
+// Memoized so typing in the input (which re-renders the page on every
+// keystroke) does not re-render — or re-parse the markdown of — existing
+// messages. Message objects are stable references once appended, so memo's
+// shallow prop compare skips the work.
+const ChatMessage = memo(function ChatMessage({ m }: { m: Message }) {
+  const hasChart = m.role === "assistant" && m.content.includes("```html");
+  return (
+    <div className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+      <div
+        className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
+          hasChart ? "w-full" : "max-w-[85%]"
+        } ${
+          m.role === "user"
+            ? "bg-gradient-to-r from-[#E63371] to-[#7B1FA2] text-white"
+            : "bg-zinc-100 text-zinc-900 prose prose-sm prose-zinc max-w-none [&>hr]:my-5 [&>h2]:mt-6 [&>h2]:mb-2 [&>h3]:mt-5 [&>h3]:mb-2 [&>p]:my-2 [&>ul]:my-2 [&>ol]:my-2"
+        }`}
+      >
+        {m.role === "user" ? (
+          <span className="whitespace-pre-wrap">{m.content}</span>
+        ) : (
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+            {m.content}
+          </ReactMarkdown>
+        )}
+      </div>
+    </div>
+  );
+});
 
 export default function Home() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -342,106 +443,9 @@ export default function Home() {
         <>
           <div className="flex-1 overflow-y-auto px-6 py-4">
             <div className="max-w-3xl mx-auto space-y-6">
-              {messages.map((m, i) => {
-                const hasChart = m.role === "assistant" && m.content.includes("```html");
-                return (
-                <div
-                  key={i}
-                  className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-                >
-                  <div
-                    className={`rounded-2xl px-4 py-3 text-sm leading-relaxed ${
-                      hasChart ? "w-full" : "max-w-[85%]"
-                    } ${
-                      m.role === "user"
-                        ? "bg-gradient-to-r from-[#E63371] to-[#7B1FA2] text-white"
-                        : "bg-zinc-100 text-zinc-900 prose prose-sm prose-zinc max-w-none [&>hr]:my-5 [&>h2]:mt-6 [&>h2]:mb-2 [&>h3]:mt-5 [&>h3]:mb-2 [&>p]:my-2 [&>ul]:my-2 [&>ol]:my-2"
-                    }`}
-                  >
-                    {m.role === "user" ? (
-                      <span className="whitespace-pre-wrap">{m.content}</span>
-                    ) : (
-                      <ReactMarkdown
-                        remarkPlugins={[remarkGfm]}
-                        components={{
-                          table: ({ children }) => (
-                            <div className="overflow-x-auto my-2">
-                              <table className="min-w-full text-xs border-collapse">
-                                {children}
-                              </table>
-                            </div>
-                          ),
-                          th: ({ children }) => (
-                            <th className="border border-zinc-300 bg-zinc-200 px-2 py-1 text-left font-semibold">
-                              {children}
-                            </th>
-                          ),
-                          td: ({ children }) => (
-                            <td className="border border-zinc-300 px-2 py-1">
-                              {children}
-                            </td>
-                          ),
-                          code: ({ className, children }) => {
-                            const content = String(children).trim();
-                            if (className === "language-html" && content.includes("<")) {
-                              return (
-                                <div className="relative w-full my-2 group">
-                                  <button
-                                    type="button"
-                                    onClick={(e) => {
-                                      const iframe = e.currentTarget
-                                        .parentElement?.querySelector("iframe");
-                                      if (iframe?.requestFullscreen) {
-                                        iframe.requestFullscreen();
-                                      }
-                                    }}
-                                    className="absolute top-2 right-2 z-10 rounded-md bg-zinc-900/70 hover:bg-zinc-900 text-white text-[11px] px-2 py-1 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1"
-                                    aria-label="Fullscreen"
-                                    title="Open in fullscreen (ESC to exit)"
-                                  >
-                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 8V3h5M21 8V3h-5M3 16v5h5M21 16v5h-5"/></svg>
-                                    Fullscreen
-                                  </button>
-                                  <iframe
-                                    srcDoc={content}
-                                    className="w-full rounded-lg border border-zinc-200 bg-white"
-                                    style={{
-                                      height: "70vh",
-                                      maxHeight: "720px",
-                                      minHeight: "420px",
-                                    }}
-                                    sandbox="allow-scripts"
-                                    allow="fullscreen"
-                                  />
-                                </div>
-                              );
-                            }
-                            return (
-                              <code className={`${className || ""} bg-zinc-200 px-1 py-0.5 rounded text-xs`}>
-                                {children}
-                              </code>
-                            );
-                          },
-                          pre: ({ children }) => <>{children}</>,
-                          a: ({ href, children }) => (
-                            <a
-                              href={href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-[#E63371] underline decoration-[#E63371]/40 hover:decoration-[#E63371] underline-offset-2"
-                            >
-                              {children}
-                            </a>
-                          ),
-                        }}
-                      >
-                        {m.content}
-                      </ReactMarkdown>
-                    )}
-                  </div>
-                </div>
-                );
-              })}
+              {messages.map((m, i) => (
+                <ChatMessage key={i} m={m} />
+              ))}
 
               {loading && (
                 <div className="flex justify-start">

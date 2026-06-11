@@ -233,30 +233,28 @@ function executeTool(name: string, input: any, chatMode: ChatMode): unknown {
   }
 }
 
+// Only explicit visual-output requests route to Opus + the large output
+// budget. Kept deliberately narrow: broad words like "report"/"informe"/
+// "design" appear in ordinary analytical questions and must NOT trigger an
+// HTML artifact. The prompt decides single-chart vs multi-slide deck; this
+// list only decides "is the user explicitly asking for a visual at all".
 const VISUAL_KEYWORDS = [
   "presentation", "presentación", "presentacion",
-  "informe visual", "visual report", "report",
-  "informe", "dashboard", "slide",
-  "diseña", "design", "crea un informe", "create a report",
-  "panoramic", "panorámico", "panoramico",
+  "slide", "deck",
+  "dashboard",
+  "informe visual", "visual report",
+  "chart", "gráfico", "grafico", "gráfica", "grafica", "graph",
 ];
 
-// If the most recent assistant turn produced an HTML block, the
-// conversation is mid-presentation ("deck mode"). Follow-ups like
-// "compare X", "map Y" or "go deeper" are deck requests even without a
-// visual keyword, so they must keep Opus + the large output budget instead
-// of dropping to Sonnet @ the low default cap and truncating.
-function inDeckMode(messages: { role: string; content: string }[]): boolean {
-  const lastAssistant = [...messages].reverse().find((m) => m.role === "assistant");
-  return !!lastAssistant && lastAssistant.content.toLowerCase().includes("```html");
-}
-
+// Deck mode is intentionally NOT sticky. A previous HTML answer must not
+// force every follow-up onto the visual path — replies are conversational
+// by default unless the latest user message itself explicitly asks for a
+// visual (see VISUAL_KEYWORDS).
 function needsOpus(messages: { role: string; content: string }[]): boolean {
   const lastUserMsg = [...messages].reverse().find((m) => m.role === "user");
   if (!lastUserMsg) return false;
   const text = lastUserMsg.content.toLowerCase();
-  if (VISUAL_KEYWORDS.some((kw) => text.includes(kw))) return true;
-  return inDeckMode(messages);
+  return VISUAL_KEYWORDS.some((kw) => text.includes(kw));
 }
 
 async function handleRemote(

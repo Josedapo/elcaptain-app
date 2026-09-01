@@ -184,7 +184,7 @@ const POST_TOOLS: Tool[] = [
         },
         league: {
           type: "string",
-          enum: ["NFL", "NBA", "MLB"],
+          enum: ["NFL", "NBA", "MLB", "MLS"],
           description: "Optional league filter",
         },
         sponsored: {
@@ -230,7 +230,7 @@ const POST_TOOLS: Tool[] = [
       properties: {
         league: {
           type: "string",
-          enum: ["NFL", "NBA", "MLB"],
+          enum: ["NFL", "NBA", "MLB", "MLS"],
           description: "Optional league filter",
         },
         contentSeries: {
@@ -254,7 +254,7 @@ const POST_TOOLS: Tool[] = [
       properties: {
         league: {
           type: "string",
-          enum: ["NFL", "NBA", "MLB"],
+          enum: ["NFL", "NBA", "MLB", "MLS"],
           description: "Optional league filter",
         },
         handle: {
@@ -288,7 +288,7 @@ const POST_TOOLS: Tool[] = [
       properties: {
         league: {
           type: "string",
-          enum: ["NFL", "NBA", "MLB"],
+          enum: ["NFL", "NBA", "MLB", "MLS"],
           description: "Optional: omit for all leagues combined",
         },
       },
@@ -312,7 +312,7 @@ const POST_TOOLS: Tool[] = [
       properties: {
         league: {
           type: "string",
-          enum: ["NFL", "NBA", "MLB"],
+          enum: ["NFL", "NBA", "MLB", "MLS"],
           description: "Optional league filter",
         },
         sponsored: {

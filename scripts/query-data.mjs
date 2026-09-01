@@ -4,7 +4,7 @@
  * Data query tool for ElCaptain.
  * Claude Code runs this script via Bash to query the database.
  *
- * Account commands (add --mode usmajors to scope to NFL/NBA/MLB):
+ * Account commands (add --mode usmajors to scope to NFL/NBA/MLB/MLS):
  *   search <query> [--limit N] [--mode usmajors]
  *   top <avgPerPost|totalValue|engRate> [--category X] [--country X] [--platform X] [--limit N] [--mode usmajors]
  *   detail <instagram|tiktok> <handle> [--mode usmajors]
@@ -296,7 +296,7 @@ switch (cmd) {
         totalAccounts: pool.length,
         platforms: { instagram: pool.length, tiktok: 0 },
         categories, countriesCount: countries.length,
-        note: "Account-level data scoped to NFL/NBA/MLB official Instagram accounts.",
+        note: "Account-level data scoped to NFL/NBA/MLB/MLS official Instagram accounts.",
       }, null, 2));
     } else {
       console.log(JSON.stringify({
@@ -496,7 +496,7 @@ switch (cmd) {
     const series = new Set(data.posts.filter((p) => p.contentSeries).map((p) => p.contentSeries));
     const brands = new Set(data.posts.filter((p) => p.brand).map((p) => p.brand));
     console.log(JSON.stringify({
-      coverage: "Post-level data covers NFL/NBA/MLB official team and league Instagram accounts.",
+      coverage: "Post-level data covers NFL/NBA/MLB/MLS official team and league Instagram accounts.",
       totalPosts: data.meta.totalPosts, leagues: data.meta.leagues,
       sponsoredCount: data.meta.sponsoredCount, unsponsoredCount: data.meta.unsponsoredCount,
       distinctContentSeries: series.size, contentSeriesList: [...series].sort(),
@@ -508,7 +508,7 @@ switch (cmd) {
   default:
     console.log(`Usage: node scripts/query-data.mjs <command> [args]
 
-Account commands (add --mode usmajors to scope to NFL/NBA/MLB):
+Account commands (add --mode usmajors to scope to NFL/NBA/MLB/MLS):
   search <query> [--limit N]
   top <avgPerPost|totalValue|engRate> [--category X] [--country X] [--platform X] [--limit N]
   detail <instagram|tiktok> <handle>

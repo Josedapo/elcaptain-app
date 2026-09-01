@@ -1,6 +1,6 @@
 {
   "meta": {
-    "totalHandles": 116
+    "totalHandles": 146
   },
   "handles": [
     {
@@ -56,6 +56,22 @@
       "platform": "instagram",
       "accountName": "Atlanta Hawks",
       "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "atlutd",
+      "platform": "instagram",
+      "accountName": "Atlanta United FC",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "austinfc",
+      "platform": "instagram",
+      "accountName": "Austin FC",
+      "league": "MLS",
       "category": "Sport Teams",
       "gender": "male"
     },
@@ -164,10 +180,26 @@
       "gender": "male"
     },
     {
+      "handle": "cfmontreal",
+      "platform": "instagram",
+      "accountName": "CF Montreal",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "chargers",
       "platform": "instagram",
       "accountName": "Los Angeles Chargers",
       "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "charlottefc",
+      "platform": "instagram",
+      "accountName": "Charlotte FC",
+      "league": "MLS",
       "category": "Sport Teams",
       "gender": "male"
     },
@@ -188,6 +220,14 @@
       "gender": "male"
     },
     {
+      "handle": "chicagofire",
+      "platform": "instagram",
+      "accountName": "Chicago Fire FC",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "chiefs",
       "platform": "instagram",
       "accountName": "Kansas City Chiefs",
@@ -204,10 +244,26 @@
       "gender": "male"
     },
     {
+      "handle": "coloradorapids",
+      "platform": "instagram",
+      "accountName": "Colorado Rapids",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "colts",
       "platform": "instagram",
       "accountName": "Indianapolis Colts",
       "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "columbuscrew",
+      "platform": "instagram",
+      "accountName": "Columbus Crew SC",
+      "league": "MLS",
       "category": "Sport Teams",
       "gender": "male"
     },
@@ -252,6 +308,14 @@
       "gender": "male"
     },
     {
+      "handle": "dcunited",
+      "platform": "instagram",
+      "accountName": "D.C. United",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "detroitlionsnfl",
       "platform": "instagram",
       "accountName": "Detroit Lions",
@@ -276,6 +340,22 @@
       "gender": "male"
     },
     {
+      "handle": "fccincinnati",
+      "platform": "instagram",
+      "accountName": "FC Cincinnati",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "fcdallas",
+      "platform": "instagram",
+      "accountName": "FC Dallas",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "guardians ig",
       "platform": "instagram",
       "accountName": "Cleveland Guardians",
@@ -292,6 +372,14 @@
       "gender": "male"
     },
     {
+      "handle": "houstondynamo",
+      "platform": "instagram",
+      "accountName": "Houston Dynamo",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "houstonrockets",
       "platform": "instagram",
       "accountName": "Houston Rockets",
@@ -304,6 +392,14 @@
       "platform": "instagram",
       "accountName": "Houston Texans",
       "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "intermiamicf",
+      "platform": "instagram",
+      "accountName": "Inter Miami CF",
+      "league": "MLS",
       "category": "Sport Teams",
       "gender": "male"
     },
@@ -344,6 +440,22 @@
       "platform": "instagram",
       "accountName": "Los Angeles Clippers",
       "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "lafc",
+      "platform": "instagram",
+      "accountName": "Los Angeles FC",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "lagalaxy",
+      "platform": "instagram",
+      "accountName": "LA Galaxy",
+      "league": "MLS",
       "category": "Sport Teams",
       "gender": "male"
     },
@@ -476,6 +588,30 @@
       "gender": null
     },
     {
+      "handle": "mls",
+      "platform": "instagram",
+      "accountName": "MLS",
+      "league": "MLS",
+      "category": "Sport Leagues",
+      "gender": "male"
+    },
+    {
+      "handle": "mnufc",
+      "platform": "instagram",
+      "accountName": "Minnesota United FC",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "nashvillesc",
+      "platform": "instagram",
+      "accountName": "Nashville SC",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "nationals",
       "platform": "instagram",
       "accountName": "Washington Nationals",
@@ -580,6 +716,22 @@
       "gender": "both"
     },
     {
+      "handle": "nerevolution",
+      "platform": "instagram",
+      "accountName": "New England Revolution",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "newyorkcityfc",
+      "platform": "instagram",
+      "accountName": "New York City FC",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "nfl",
       "platform": "instagram",
       "accountName": "NFL",
@@ -632,6 +784,14 @@
       "platform": "instagram",
       "accountName": "Baltimore Orioles",
       "league": "MLB",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "orlandocitysc",
+      "platform": "instagram",
+      "accountName": "Orlando City SC",
+      "league": "MLS",
       "category": "Sport Teams",
       "gender": "male"
     },
@@ -700,6 +860,14 @@
       "gender": "male"
     },
     {
+      "handle": "philaunion",
+      "platform": "instagram",
+      "accountName": "Philadelphia Union",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "phillies",
       "platform": "instagram",
       "accountName": "Philadelphia Phillies",
@@ -764,6 +932,14 @@
       "gender": "male"
     },
     {
+      "handle": "realsaltlake",
+      "platform": "instagram",
+      "accountName": "Real Salt Lake",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "reds",
       "platform": "instagram",
       "accountName": "Cincinnati Reds",
@@ -804,6 +980,14 @@
       "gender": "male"
     },
     {
+      "handle": "sandiegofc",
+      "platform": "instagram",
+      "accountName": "San Diego FC",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "seahawks",
       "platform": "instagram",
       "accountName": "Seattle Seahawks",
@@ -828,6 +1012,30 @@
       "gender": "male"
     },
     {
+      "handle": "sjearthquakes",
+      "platform": "instagram",
+      "accountName": "San Jose Earthquakes",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "soundersfc",
+      "platform": "instagram",
+      "accountName": "Seattle Sounders FC",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "sportingkc",
+      "platform": "instagram",
+      "accountName": "Sporting Kansas City",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "spurs",
       "platform": "instagram",
       "accountName": "San Antonio Spurs",
@@ -840,6 +1048,14 @@
       "platform": "instagram",
       "accountName": "Pittsburgh Steelers",
       "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "stlcitysc",
+      "platform": "instagram",
+      "accountName": "St. Louis City SC",
+      "league": "MLS",
       "category": "Sport Teams",
       "gender": "male"
     },
@@ -860,6 +1076,14 @@
       "gender": "male"
     },
     {
+      "handle": "timbersfc",
+      "platform": "instagram",
+      "accountName": "Portland Timbers",
+      "league": "MLS",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
       "handle": "timberwolves",
       "platform": "instagram",
       "accountName": "Minnesota Timberwolves",
@@ -872,6 +1096,14 @@
       "platform": "instagram",
       "accountName": "Tennessee Titans",
       "league": "NFL",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "torontofc",
+      "platform": "instagram",
+      "accountName": "Toronto FC",
+      "league": "MLS",
       "category": "Sport Teams",
       "gender": "male"
     },
@@ -912,6 +1144,14 @@
       "platform": "instagram",
       "accountName": "Washington Wizards",
       "league": "NBA",
+      "category": "Sport Teams",
+      "gender": "male"
+    },
+    {
+      "handle": "whitecapsfc",
+      "platform": "instagram",
+      "accountName": "Vancouver Whitecaps FC",
+      "league": "MLS",
       "category": "Sport Teams",
       "gender": "male"
     },

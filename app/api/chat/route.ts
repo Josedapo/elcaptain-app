@@ -138,7 +138,7 @@ async function handleLocal(
 
   const scopeHint =
     chatMode === "usmajors"
-      ? "When you run account commands (search/top/filter/detail/stats), pass --mode usmajors to scope to NFL/NBA/MLB accounts."
+      ? "When you run account commands (search/top/filter/detail/stats), pass --mode usmajors to scope to NFL/NBA/MLB/MLS accounts."
       : "";
 
   const fullPrompt = `${systemPrompt}
@@ -263,7 +263,7 @@ async function handleRemote(
 ): Promise<string> {
   const client = getAnthropicClient();
   const useOpus = needsOpus(messages);
-  const model = useOpus ? "claude-opus-4-6" : "claude-sonnet-4-6";
+  const model = useOpus ? "claude-opus-4-8" : "claude-sonnet-4-6";
   // Opus (visual/deck path) gets a large output window so multi-slide decks
   // don't truncate. The Sonnet floor is 16K, not 4K: max_tokens is a ceiling
   // billed per token actually generated, so raising it costs nothing unless

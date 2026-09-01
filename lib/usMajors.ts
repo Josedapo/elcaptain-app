@@ -5,7 +5,7 @@ export interface HandleMeta {
   handle: string;
   platform: "instagram" | "tiktok";
   accountName: string;
-  league: "NFL" | "NBA" | "MLB";
+  league: "NFL" | "NBA" | "MLB" | "MLS";
   category: string;
   gender: string | null;
 }

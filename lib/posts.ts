@@ -5,7 +5,7 @@ import { getUsMajorsHandleMap } from "./usMajors";
 export interface Post {
   id: string;
   handle: string;
-  league: "NFL" | "NBA" | "MLB";
+  league: "NFL" | "NBA" | "MLB" | "MLS";
   publishedAt: string;
   totalValue: number;
   impressions: number;
@@ -81,7 +81,7 @@ function formatPost(p: Post) {
 }
 
 interface PostFilters {
-  league?: "NFL" | "NBA" | "MLB";
+  league?: "NFL" | "NBA" | "MLB" | "MLS";
   handle?: string;
   sponsored?: boolean;
   brand?: string;
@@ -163,7 +163,7 @@ export function getPostsByAccount(handle: string, limit = 50) {
   const posts = data.posts.filter((p) => p.handle.toLowerCase() === h);
 
   if (posts.length === 0) {
-    return { error: `No posts found for handle '${handle}' in NFL/NBA/MLB dataset` };
+    return { error: `No posts found for handle '${handle}' in NFL/NBA/MLB/MLS dataset` };
   }
 
   const sorted = [...posts].sort((a, b) => b.engRate - a.engRate);
@@ -294,7 +294,7 @@ export function getBrandStats(brandQuery: string) {
   };
 }
 
-export function getLeagueStats(league?: "NFL" | "NBA" | "MLB") {
+export function getLeagueStats(league?: "NFL" | "NBA" | "MLB" | "MLS") {
   const data = load();
   const filter = league ? (p: Post) => p.league === league : () => true;
   const pool = data.posts.filter(filter);
@@ -398,7 +398,7 @@ export function getPostsStats() {
     data.posts.filter((p) => p.brand).map((p) => p.brand!)
   );
   return {
-    coverage: "Post-level data covers NFL/NBA/MLB official team and league Instagram accounts.",
+    coverage: "Post-level data covers NFL/NBA/MLB/MLS official team and league Instagram accounts.",
     totalPosts: data.meta.totalPosts,
     leagues: data.meta.leagues,
     sponsoredCount: data.meta.sponsoredCount,

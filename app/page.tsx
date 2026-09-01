@@ -391,7 +391,7 @@ export default function Home() {
               />
               <p className="text-zinc-500">
                 {mode === "usmajors"
-                  ? "Sponsorship intelligence for the US Major Leagues — NFL, NBA and MLB. Surface high-engagement content available for activation across 116 official Instagram accounts and 25,000+ posts."
+                  ? "Sponsorship intelligence for the US Major Leagues — NFL, NBA, MLB and MLS. Surface high-engagement content available for activation across 146 official Instagram accounts and 29,000+ posts."
                   : "Benchmark performance, spot underpriced opportunities, and reallocate with confidence — backed by real data from 15K+ teams and creators across 128 countries."}
               </p>
             </div>
@@ -490,7 +490,7 @@ export default function Home() {
             </form>
             {mode === "usmajors" && (
               <p className="max-w-3xl mx-auto mt-2 text-[11px] text-zinc-400 text-center">
-                US Majors Deep Dive — scope: NFL, NBA, MLB official Instagram accounts and posts
+                US Majors Deep Dive — scope: NFL, NBA, MLB, MLS official Instagram accounts and posts
               </p>
             )}
           </div>

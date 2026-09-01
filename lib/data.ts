@@ -227,7 +227,7 @@ export function getStats(scope?: "global" | "usmajors") {
       platforms: { instagram: pool.length, tiktok: 0 },
       categories: Array.from(categories).sort(),
       countriesCount: countries.size,
-      note: "Account-level data scoped to NFL/NBA/MLB official Instagram accounts.",
+      note: "Account-level data scoped to NFL/NBA/MLB/MLS official Instagram accounts.",
     };
   }
   return {
